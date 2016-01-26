@@ -1,0 +1,39 @@
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="js/data.js"></script>
+<script src="js/draw.js"></script>
+<script src="js/net.js"></script>
+<script src="http://localhost:63321/scripts/vendor/jquery.js"></script>
+
+
+
+
+<script>
+var counter = 0;
+
+$(function(){
+    $('#theFrame').load(function() {
+      if(counter==1){
+          window.location = "http://localhost:63321/Private/Home.aspx";
+    	}
+    	counter=counter + 1;
+    });
+});
+
+function myFunction() {
+    alert("message");
+}
+
+</script>
+
+
+
+
+
+
+<button id="target" onclick="redraw()">Click me</button>
+
+<div id="chart_div"></div>
+
+<iframe id="theFrame" src="localhost:63321" style="position:relative; width:50%; height:600;" frameborder="0">
+</iframe>
