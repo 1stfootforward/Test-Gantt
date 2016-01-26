@@ -12,25 +12,13 @@ var task = {
     "11": {"sdate":"January 21, 2016", "edate":"January 29, 2016", "duration":null, "name":"one", "category":"plumber"},
     "12": {"sdate":"January 1, 2016", "edate":"January 31, 2016", "duration":null, "name":"two", "category":"plumber"},
     "13": {"sdate":"January 1, 2016", "edate":"January 3, 2016", "duration":null, "name":"three", "category":"builder"},
-    "14": {"sdate":"January 21, 2016", "edate":"January 29, 2016", "duration":null, "name":"one", "category":"electrician"},
-    "15": {"sdate":"January 1, 2016", "edate":"January 31, 2016", "duration":null, "name":"two", "category":"builder"},
-    "16": {"sdate":"January 1, 2016", "edate":"January 3, 2016", "duration":null, "name":"three", "category":"electrician"},
-    "17": {"sdate":"January 21, 2016", "edate":"January 29, 2016", "duration":null, "name":"one", "category":"plumber"},
-    "18": {"sdate":"January 1, 2016", "edate":"January 31, 2016", "duration":null, "name":"two", "category":"plumber"},
-    "19": {"sdate":"January 1, 2016", "edate":"January 3, 2016", "duration":null, "name":"three", "category":"builder"},
-    "20": {"sdate":"January 21, 2016", "edate":"January 29, 2016", "duration":null, "name":"one", "category":"electrician"},
-    "21": {"sdate":"January 1, 2016", "edate":"January 31, 2016", "duration":null, "name":"two", "category":"builder"},
-    "22": {"sdate":"January 1, 2016", "edate":"January 3, 2016", "duration":null, "name":"three", "category":"electrician"},
-    "23": {"sdate":"January 21, 2016", "edate":"January 29, 2016", "duration":null, "name":"one", "category":"plumber"},
-    "24": {"sdate":"January 1, 2016", "edate":"January 31, 2016", "duration":null, "name":"two", "category":"plumber"},
-    "25": {"sdate":"January 1, 2016", "edate":"January 3, 2016", "duration":null, "name":"three", "category":"builder"},
-    "26": {"sdate":"January 21, 2016", "edate":"January 29, 2016", "duration":null, "name":"one", "category":"electrician"},
-    "27": {"sdate":"January 1, 2016", "edate":"January 31, 2016", "duration":null, "name":"two", "category":"builder"},
-    "28": {"sdate":"January 1, 2016", "edate":"January 3, 2016", "duration":null, "name":"three", "category":"electrician"},
-    "29": {"sdate":"January 21, 2016", "edate":"January 29, 2016", "duration":null, "name":"one", "category":"plumber"},
-    "30": {"sdate":"January 1, 2016", "edate":"January 31, 2016", "duration":null, "name":"two", "category":"plumber"},
-    "10": {"sdate":"January 1, 2016", "edate":"January 3, 2016", "duration":null, "name":"three", "category":"builder"},
+    "10": {"sdate":"January 1, 2016", "edate":"January 3, 2016", "duration":null, "name":"three", "category":"builder"}
 };
 
+var tasks = {
+    "0": {"sdate":"January 21, 2016", "edate":"January 29, 2016", "duration":null, "name":"one", "category":"electrician"},
+    "1": {"sdate":"January 21, 2016", "edate":"January 29, 2016", "duration":null, "name":"one", "category":"electrician"},
+    "2": {"sdate":"January 1, 2016", "edate":"January 31, 2016", "duration":null, "name":"two", "category":"builder"}
+    };
 var active;
 

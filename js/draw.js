@@ -9,13 +9,15 @@
 
     var chart;
     var data;
+    var tableData;
     var table;
+    var formID;
 
     var resources = [];
     var selectedResource = "";
 
     var options = {
-      height: 400,
+      height: 300,
       title: 'Company Performance',
       hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
       colors: ['black', 'white'],
@@ -56,6 +58,16 @@
       data.addColumn('number', 'Percent Complete');
       data.addColumn('string', 'Dependencies');
 
+      tableData = new google.visualization.DataTable();
+      tableData.addColumn('string', 'Task ID');
+      tableData.addColumn('string', 'Task Name');
+      tableData.addColumn('string', 'Resource');
+      tableData.addColumn('date', 'Start Date');
+      tableData.addColumn('date', 'End Date');
+      tableData.addColumn('number', 'Duration');
+      tableData.addColumn('number', 'Percent Complete');
+      tableData.addColumn('string', 'Dependencies');
+
     }
 
 
@@ -73,7 +85,7 @@
       table = new google.visualization.Table(document.getElementById('table_div'));
       
       loadChart();
-
+    
        google.visualization.events.addListener(chart, 'select', selectHandler);
        google.visualization.events.addListener(chart, 'onmouseover', saveSelection);
 
@@ -88,14 +100,20 @@
             selectedResource = data.getValue(selectedItem, 2);
 
             loadChart();
+          } else {
+            formID = selectedItem;
+            formFill(selectedItem);
+            loadChart();
           }
         }
+
+
     }
 
 function redraw() {
-      alert(data.getValue(0, 3));
+      
        loadChart();
-       chart.draw(data, options);
+       formFill(0);
 }
 
 function addrow(id) {
@@ -143,8 +161,19 @@ function loadChart() {
     data.sort([{column: 3}, {column: 1}]);
 
     chart.draw(data, options);
-    table.draw(data, {showRowNumber: true, width: '100%'})
+    goTable();
+    table.draw(tableData, {showRowNumber: true, width: '100%'});
   }
+}
+
+function goTable() {
+        for (var i = 0; i < Object.keys(task).length; i++) {
+          id = ""+i;
+          start = new Date(task[id].sdate);
+          end = new Date(task[id].edate);
+
+          tableData.addRows([[id, task[id].category + " " + task[id].name, task[id].category, start, end, null, 100, null]]);
+        }
 }
 
 function previousWeek() {
