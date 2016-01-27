@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="ganttApp">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,14 +10,10 @@
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="lib/gantt/dhtmlxgantt.css">
-    <link rel="stylesheet" href="styles/style.css">
-
-    <script src="lib/angular/angular.min.js"></script>
-	<script src="lib/gantt/dhtmlxgantt.js"></script>
-	<script src="js/main.js"></script>
-	<script src="js/app.js"></script>
-	<script src="js/app.gantt.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script src="js/data.js"></script>
+	<script src="js/draw.js"></script>
+	<script src="js/form.js"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -26,7 +22,7 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body ng-controller="MainGanttCtrl">
+  <body>
 <div class="container">
     
 
@@ -66,19 +62,15 @@
 		<button class="btn btn-default" onclick="toggleTimeFrame()">Toggle Time Frame</button>
 		<button class="btn btn-default" onclick="freshForm()">New Task</button>
 		<div class="col-md-6">
-			<button class="btn btn-default" onclick="left()">Previous Week</button>
-			<button class="btn btn-default" onclick="right()">Next Week</button>
+			<button class="btn btn-default" onclick="previousWeek()">Previous Week</button>
+			<button class="btn btn-default" onclick="nextWeek()">Next Week</button>
 		</div>
 	  </div>
 	</div>
 
 </br>
 </br>
-	<div data="tasks" dhx-gantt style="min-height:800px; width:100%;">
-		<div gantt-template="task_text">
-			<strong>{{task.text | uppercase}}</strong>
-		</div>
-	</div>
+	<div class="space" id="chart_div"></div>
 	<div class="space" id="table_div"></div>
 </div>
 
@@ -86,5 +78,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+
+	<script src="js/form.js"></script>
   </body>
 </html>

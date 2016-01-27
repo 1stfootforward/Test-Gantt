@@ -1,0 +1,48 @@
+	.weekend{ background: rgb(54, 54, 54)!important; color:white !important;}
+	.today{ background: #BD7990!important; color:white !important;}
+
+	.task_class {
+	    font-size: 36px; 
+	}	
+
+	.gantt_task_line, .gantt_task_progress {
+	    border: none;
+    	border-radius: 5px;
+    	height: 80%
+	}
+
+	.gantt_task_cell, .gantt_scale_cell {
+		border-right: 1px solid white!important;
+	}
+
+	.gantt_task_row.gantt_selected {
+		background-color: rgb(245, 245, 245);
+	}
+
+	.gantt_task_cell.gantt_selected {
+		box-shadow: 0 0 5px black!important;
+	}
+
+	.gantt_task_row, .gantt_row {
+	    border-bottom: none;
+	}
+
+	.gantt_task_line, .gantt_project {
+	    margin-top: 7px;
+	    height: 30px !important;
+	    line-height: 30px !important;
+	}
+
+	.blue {background-color:#3366CC !important;}
+	.red {background-color: #DC3912 !important;}
+	.orange {background-color: #FF9900 !important;}
+	.green {background-color: #109618 !important;}
+	.purple {background-color: #990099 !important;}
+	.navy {background-color: #3B3EAC !important;}
+
+
+	
+
+
+
+
