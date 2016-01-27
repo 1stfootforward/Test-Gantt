@@ -24,14 +24,9 @@
   </head>
   <body>
 <div class="container">
-    <button class="btn btn-default" onclick="collapse()">Collapse / Expand</button>
+    
 
-	<div class="space" id="chart_div"></div>
-
-	<button class="btn btn-default" onclick="previousWeek()">Previous Week</button>
-	<button class="btn btn-default" onclick="nextWeek()">Next Week</button>
-	<button class="btn btn-default" onclick="toggleTimeFrame()">Toggle Time Frame</button>
-	<button class="btn btn-default" onclick="freshForm()">New Task</button>
+	
 
 	<form id="taskForm" class="row space">
 	 <div class="col-md-6">	
@@ -57,7 +52,25 @@
 	  
 	</form>
 	<button class="btn btn-primary" type="submit" onclick="formSubmit()">Submit</button>
+</br>
+</br>
 
+	<div class="container">	
+	  <div class="row">
+		<button class="btn btn-default" onclick="collapse()">Collapse / Expand All</button>
+		
+		<button class="btn btn-default" onclick="toggleTimeFrame()">Toggle Time Frame</button>
+		<button class="btn btn-default" onclick="freshForm()">New Task</button>
+		<div class="col-md-6">
+			<button class="btn btn-default" onclick="previousWeek()">Previous Week</button>
+			<button class="btn btn-default" onclick="nextWeek()">Next Week</button>
+		</div>
+	  </div>
+	</div>
+
+</br>
+</br>
+	<div class="space" id="chart_div"></div>
 	<div class="space" id="table_div"></div>
 </div>
 

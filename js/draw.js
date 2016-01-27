@@ -17,28 +17,15 @@
     var selectedResource = "";
 
     var options = {
-      height: 300,
-      title: 'Company Performance',
-      hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
-      colors: ['black', 'white'],
+      height: 800,
       gantt: {
             criticalPathEnabled: true,
-            
-            criticalPathStyle: {
-              stroke: '#e64a19',
-              strokeWidth: 5
-            },
+
             labelStyle: {
-              fontSize: 11,
+              fontSize: 16,
               color: 'black'
-            },
-            hAxis: { 
-                viewWindowMode: 'explicit',
-                viewWindow: {
-                    min:9,
-                    max: 10
-                }
             }
+            
           }
         }
         
@@ -101,8 +88,8 @@
 
             loadChart();
           } else {
-            formID = selectedItem;
-            formFill(selectedItem);
+            formID =  data.getValue(selectedItem, 0);
+            formFill(formID);
             loadChart();
           }
         }
@@ -126,12 +113,13 @@ function addrow(id) {
     if(data.getValue(row, 4) > end) { data.setValue(row, 4, end); }
 
     data.setValue(row, 1, data.getValue(row, 2));
+    data.setValue(row, 7, null);
 
 
   } else {
 
     resources[data.getNumberOfRows()]=task[id].category;
-    data.addRows([[id, task[id].category + " " + task[id].name, task[id].category, start, end, null, 100, null]]);
+    data.addRows([[id, task[id].category + " " + task[id].name, task[id].category, start, end, null, null, task[id].depends]]);
   }
 
 }
@@ -158,7 +146,6 @@ function loadChart() {
   } 
   if ( data.getNumberOfRows() > 0 ) { 
 
-    data.sort([{column: 3}, {column: 1}]);
 
     chart.draw(data, options);
     goTable();
@@ -204,6 +191,9 @@ function toggleTimeFrame() {
 }
 
 function collapse() {
+  past.setDate(past.getDate() - timeFrame);
+  future.setDate(future.getDate() + timeFrame);
+
   if(selectedResource == "") {
     selectedResource = "skip";
     loadChart();
