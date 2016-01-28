@@ -26,8 +26,6 @@
 	.gantt_task_row, .gantt_row {
 	    border-bottom: none;
 	    background-color: none;
-  		content: "Joe's Task:";
-
 	}
 
 	.gantt_row.odd, .gantt_task_row.odd {
@@ -37,11 +35,6 @@
 	.gantt_task_line, .gantt_project {
 	    padding-top: 3px;
 	    padding-bottom: 3px;
-	}
-
-	.chart {
-		min-height: 600px;
-
 	}
 
 	.blue {background-color:#3366CC !important;}
