@@ -16,15 +16,15 @@ app.controller('MainGanttCtrl', function($scope) {
       {id:6, text:"Task ",    start_date:"26-01-2016", duration:3, order:10, parent:4, color:"red"},
       {id:7, text:"Company ", start_date:"25-01-2016", duration:8,order:10, open: false, color:"orange"},
       {id:8, text:"Task ",    start_date:"25-01-2016", duration:2, order:10, parent:7, color:"orange"},
-      {id:9, text:"Task ",    start_date:"28-01-2016", duration:4, order:10, parent:7, color:"orange"},
+      {id:9, text:"Task ",    start_date:"28-01-2016", duration:5, order:10, parent:7, color:"orange"},
       {id:10, text:"Company ", start_date:"22-01-2016", duration:7,order:10, open: false, color:"green"},
       {id:11, text:"Task ",    start_date:"22-01-2016", duration:2, order:10, parent:10, color:"green"},
       {id:12, text:"Task ",    start_date:"22-01-2016", duration:7, order:10, parent:10, color:"green"},
       {id:13, text:"Company ", start_date:"1-02-2016", duration:5, order:10, open: false, color:"purple"},
       {id:14, text:"Task ",    start_date:"1-02-2016", duration:2, order:10, parent:13, color:"purple"},
       {id:15, text:"Task ",    start_date:"3-02-2016", duration:3, order:10, parent:13, color:"purple"},
-      {id:19, text:"Company ", start_date:"25-01-2015", duration:7,order:10, open: false, color:"navy"},
-      {id:20, text:"Task ",    start_date:"25-01-2016", duration:2, order:10, parent:19, color:"navy"},
+      {id:19, text:"Company ", start_date:"25-01-2015", duration:7, order:10, open: false, color:"navy"},
+      {id:20, text:"Task ",    start_date:"25-01-2016", duration:2, order:10, parent:19, color:"red"},
       {id:21, text:"Task ",    start_date:"28-01-2016", duration:5, order:10, parent:19, color:"navy"}
     ]};
 

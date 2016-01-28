@@ -111,19 +111,21 @@
 			if(toggle) {
 				gantt.eachTask(function(task){
 				    gantt.open(task.id)
+				    gantt.getTask(task.id).open = true;
 				});
 				gantt.render();
 				toggle = false;
-				gantt.getTask(id).open = true;
+				
 			} else {
 
 				gantt.eachTask(function(task){
 
 				    gantt.close(task.id)
+				    gantt.getTask(task.id).open = false;
 				});
 				gantt.render();
 				toggle = true;
-				gantt.getTask(id).open = false;
+				
 			}
 		}
 
