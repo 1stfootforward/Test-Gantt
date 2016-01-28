@@ -87,20 +87,23 @@
 		    
 		    if( gantt.getTask(id).open) { 
 		    	gantt.close(id)
+		    	gantt.getTask(id).open = false;
+
 		    } else {
 				gantt.open(id);
+				gantt.getTask(id).open = true;
 			}
-			return false;
 		});
 
 		gantt.attachEvent("onTaskClick", function(id,e){
-		    
+
 		    if( gantt.getTask(id).open) { 
 		    	gantt.close(id)
+		    	gantt.getTask(id).open = false;
 		    } else {
 				gantt.open(id);
+				gantt.getTask(id).open = true;
 			}
-			return false;
 		});
 
 		function collapse() {
@@ -111,6 +114,7 @@
 				});
 				gantt.render();
 				toggle = false;
+				gantt.getTask(id).open = true;
 			} else {
 
 				gantt.eachTask(function(task){
@@ -119,6 +123,7 @@
 				});
 				gantt.render();
 				toggle = true;
+				gantt.getTask(id).open = false;
 			}
 		}
 
