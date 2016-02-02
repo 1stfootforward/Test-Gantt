@@ -11,7 +11,18 @@
 		var zoom = true;
 		var toggle = false;
 
+
+
+
+
 		init();
+
+		function refresh() {
+			gantt.render();
+			gantt.refreshData();
+		}
+
+
 
 		function left() {
 			startOfWeek.setDate(startOfWeek.getDate()-7);
@@ -20,7 +31,8 @@
 			gantt.config.start_date = startOfWeek;
 			gantt.config.end_date = endOfWeek;
 
-			 gantt.render();
+			refresh();
+
 		};
 
 		function right() {
@@ -30,7 +42,7 @@
 			gantt.config.start_date = startOfWeek;
 			gantt.config.end_date = endOfWeek;
 
-			 gantt.render();
+			refresh()
 		};
 
 		function toggleTimeFrame() {
@@ -39,22 +51,24 @@
 				zoom = false;
 				startOfWeek.setDate(startOfWeek.getDate()-7);
 				endOfWeek.setDate(endOfWeek.getDate()+7);
-				gantt.config.step = 2;
+				gantt.config.scale_unit = "week"; 
+				gantt.config.date_scale = "Week #%W";
 			} else {
 				zoom = true;
 				startOfWeek.setDate(startOfWeek.getDate()+7);
 				endOfWeek.setDate(endOfWeek.getDate()-7);
-				gantt.config.step = 1;
+				gantt.config.scale_unit= "day";
 			}
 
 			gantt.config.start_date = startOfWeek;
 			gantt.config.end_date = endOfWeek;
-			gantt.render();
+			refresh();
 		};
 
 		function mediaQuery() {
 			if(window.innerWidth < 800) {
-				gantt.config.step = 2;
+				gantt.config.scale_unit = "week"; 
+				gantt.config.date_scale = "Week %W";
 			}
 		};
 
@@ -80,38 +94,66 @@
 
     	gantt.templates.task_class = function(start, end, task){
     		 
-        	 return task.color;
+        	 if(task.parent>0) {
+        	 	parent = gantt.getTask(task.parent);
+	        	 if (parent.shrunk) {
+	        	 	return task.color + " shrunk";
+	        	 }
+	        	 else {
+	        	 	return task.color + " big";
+	        	 }
+	       	 } else { return task.color + " project"; }
+
+        	 	
     	};
+
+    	gantt.templates.task_row_class = function(start, end, task){ 
+        	
+        	if(task.parent>0) {
+        		parent = gantt.getTask(task.parent);
+
+	        	 if (parent.shrunk) {
+	        	 	return " shrunk";
+	        	 }
+	        	 else {
+	        	 	return "big";
+	        	 }
+	       	 } else { return " shrunk"; }
+    	};
+
+    	gantt.templates.task_text=function(start,end,task){
+    		if(task.parent<1) {
+		    	return tasl.text;
+		    } else {return "<b> "+task.text+",<b> Active:</b> "+task.start_date + " / "+task.end_date;}
+		};
 
     	gantt.attachEvent("onTaskDblClick", function(id,e){
 		    
-		    if( gantt.getTask(id).open) { 
-		    	gantt.close(id)
-		    	gantt.getTask(id).open = false;
-
+		    task = gantt.getTask(id);
+		    if( task.shrunk) { 
+		    	task.shrunk = false;
 		    } else {
-				gantt.open(id);
-				gantt.getTask(id).open = true;
+				task.shrunk = true;
 			}
+			refresh();
 		});
 
 		gantt.attachEvent("onTaskClick", function(id,e){
 
-		    if( gantt.getTask(id).open) { 
-		    	gantt.close(id)
-		    	gantt.getTask(id).open = false;
+			task = gantt.getTask(id);
+		    if( task.shrunk) { 
+		    	task.shrunk = false;
 		    } else {
-				gantt.open(id);
-				gantt.getTask(id).open = true;
+				task.shrunk = true;
 			}
+			refresh();
 		});
 
 		function collapse() {
 
 			if(toggle) {
 				gantt.eachTask(function(task){
-				    gantt.open(task.id)
-				    gantt.getTask(task.id).open = true;
+				    gantt.getTask(task.id).shrunk = true;
 				});
 				gantt.render();
 				toggle = false;
@@ -119,15 +161,18 @@
 			} else {
 
 				gantt.eachTask(function(task){
-
-				    gantt.close(task.id)
-				    gantt.getTask(task.id).open = false;
+				    gantt.getTask(task.id).shrunk = false;
 				});
 				gantt.render();
 				toggle = true;
 				
 			}
+			refresh();
 		}
+
+		gantt.templates.leftside_text = function(start, end, task){
+    		return "<b>Priority: </b>" +task.priority;
+		};
 
 		function setProjects() {
 			gantt.eachTask(function(task){
@@ -150,7 +195,7 @@
 					console.log(task.end_date);	
 				}
 			});
-			gantt.render();
+			refresh();
 		}
 
 		gantt.attachEvent("onTaskDrag", function(id, mode, task, original){
@@ -159,20 +204,10 @@
 
 		gantt.attachEvent("onTaskCreated", function(task){
 			
-		 var level = gantt.calculateTaskLevel(task),
-		   types = gantt.config.types;
-		 
-		 //assign task type based on task level
-		 switch (level){
-		  case 0:
-		   task.type = types.project;
-		   break;
-		  case 1:
-		   task.type = types.subproject;
-		   break;
-		  default:
-		   task.type = types.task;
-		   break;
-		 }
-		 return true;
+		 gantt.open(task.id);
 		});
+
+		function reschedule() {
+			gantt.expand();
+			refresh();
+		}
