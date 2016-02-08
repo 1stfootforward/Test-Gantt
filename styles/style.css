@@ -68,3 +68,8 @@
 	border-color: black!important;
 	opacity: 1!important;
 }
+
+.gantt_task_line.unscheduled {
+	border-radius: 50px;
+	width: 40px!important;
+}

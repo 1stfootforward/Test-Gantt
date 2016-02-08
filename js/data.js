@@ -5,6 +5,7 @@
         var underline = [];
         var duration;
         var early = new Date();
+        var count;
         early.setYear(early.getFullYear()-1);
         
         var load =  {
@@ -56,6 +57,19 @@
             {"name":"Plumb Co", "open":false, "color":"purple"}
         ];
 
+        var unscheduled = [
+            {"name":"Bob", "trade":1},
+            {"name":"Doug", "trade":1},
+            {"name":"Bob", "trade":2},
+            {"name":"Doug", "trade":2},
+            {"name":"Doug", "trade":1},
+            {"name":"Bob", "trade":3},
+            {"name":"Doug", "trade":3},
+            {"name":"Sam", "trade":1}
+        ];
+
+
+
         function daysBetween(one, another) {
             var timeDiff = Math.abs(one.getTime() - another.getTime());
             return Math.ceil(timeDiff / (1000 * 3600 * 24)); 
@@ -65,7 +79,7 @@
 
             underline.length = 0;
 
-            var count = 1;
+            count = 1;
 
             for (var i in trades) {
                 c = i + 1;
@@ -90,9 +104,25 @@
                     }
                 count++;
             }
+
+            addUnscheduled();
             height = (count*40);
             document.getElementById('gantt_here').setAttribute("style","height:"+height+"px");
 
+        }
+
+        function addUnscheduled() {
+          var groups = []
+          for (var i = unscheduled.length - 1; i >= 0; i--) {
+            if(isNaN(groups[unscheduled[i].trade])) {
+              groups[unscheduled[i].trade] = 1;
+            } else {groups[unscheduled[i].trade]++;}
+          };
+          
+          for (var i = groups.length - 1; i > 0; i--) {
+            load.data[count - 1] = {id: count , text: "+ " + groups[i] , unscheduled: false , start_date: startOfWeek , duration: 1, color: "unscheduled "+color[i], order:10, parent: i};
+            count++;
+          };
         }
 
 
