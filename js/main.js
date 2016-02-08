@@ -70,7 +70,6 @@
 
 			gantt.config.start_date = startOfWeek;
 			gantt.config.end_date = endOfWeek;
-			alert("fire");
 			gantt.render();
 		};
 
