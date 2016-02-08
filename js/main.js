@@ -113,14 +113,18 @@
     	};
 
     	gantt.attachEvent("onTaskDblClick", function(id,e){
-		    if( gantt.getTask(id).open) { 
-		    	gantt.close(task.id)
-				trades[task.id-1].open = false;
+		    task = gantt.getTask(id);
 
-		    } else {
-				gantt.open(task.id);
-				trades[task.id-1].open = true;
-			}
+			if(task.parent==0) {
+			    if( gantt.getTask(id).open) { 
+			    	gantt.close(id)
+			    	trades[task.id-1].open = false;
+			    } else {
+					gantt.open(task.id);
+					trades[task.id-1].open = true;
+				}
+			} else {taskFired(task);}
+			refresh();
 		});
 
 		gantt.attachEvent("onTaskClick", function(id,e){
