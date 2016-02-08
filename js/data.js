@@ -106,7 +106,7 @@
             }
 
             addUnscheduled();
-            height = (count*400);
+            height = (count*40);
             document.getElementById('gantt_here').setAttribute("style","height:"+height+"px");
 
         }
