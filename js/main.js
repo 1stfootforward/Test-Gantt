@@ -13,16 +13,12 @@
 		var startOfWeek = getMonday(new Date());
 		var endOfWeek = new Date(startOfWeek.setDate(startOfWeek.getDate()+date_range));
 
-		var listOfStartDates = [];
-		var listOfEndDates = [];
-		
+		startOfWeek = getMonday(new Date());
+		gantt.config.start_date = startOfWeek;
+		gantt.config.end_date = endOfWeek;
 
 		var zoom = true;
 		var collapse = true;
-
-		init();
-
-
 
 		function left() {
 			startOfWeek.setDate(startOfWeek.getDate()-7);
@@ -79,7 +75,10 @@
 		};
 
 		function mediaQuery() {
-
+			if(window.innerWidth < 0) {
+				toggleTimeFrame();
+				$( ".gantt_task_scale" ).attr( "data-magellan-expedition", "fixed" );
+			}
 		};
 
 		function getMonday(d) {
@@ -91,9 +90,7 @@
 
 		function init() {
 			
-			startOfWeek = getMonday(new Date());
-			gantt.config.start_date = startOfWeek;
-			gantt.config.end_date = endOfWeek;
+			
 			
 
 			
