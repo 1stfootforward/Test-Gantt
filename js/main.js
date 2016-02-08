@@ -76,7 +76,6 @@
 
 		function mediaQuery() {
 			if(window.innerWidth < 0) {
-				toggleTimeFrame();
 				$( ".gantt_task_scale" ).attr( "data-magellan-expedition", "fixed" );
 			}
 		};
