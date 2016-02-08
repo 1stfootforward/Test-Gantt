@@ -18,7 +18,7 @@
 		gantt.config.end_date = endOfWeek;
 
 		var zoom = true;
-		var collapse = true;
+		var collapse = false;
 
 		function left() {
 			startOfWeek.setDate(startOfWeek.getDate()-7);

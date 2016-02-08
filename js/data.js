@@ -8,27 +8,19 @@
         var count;
         early.setYear(early.getFullYear()-1);
         
-        var load =  {
-            data:[
-                
-            ],
-                    links:[
-        ]
-        };
-
+        var load =  {data:[],links:[]};
 
         var tasks = [
             {"name":"John", "start":"02-09-2016", "end":"02-11-2016", "trade":1},
             {"name":"Anna", "start":"02-09-2016", "end":"02-14-2016", "trade":3},
             {"name":"Rick", "start":"02-11-2017", "end":"02-13-2017", "trade":2},
             {"name":"Ricky", "start":"02-01-2016", "end":"02-14-2016", "trade":2},
-            {"name":"Rick", "start":"01-11-2016", "end":"02-13-2016", "trade":2},       ];
-
+            {"name":"Rick", "start":"01-11-2016", "end":"02-13-2016", "trade":2}] ;
 
         var trades = [
-            {"name":"Ecraft", "open":false, "color":"blue" },
-            {"name":"Fletchers", "open":false, "color":"red"},
-            {"name":"Plumb Co", "open":false, "color":"purple"}
+            {"name":"Ecraft", "open":true, "color":"blue" },
+            {"name":"Fletchers", "open":true, "color":"red"},
+            {"name":"Plumb Co", "open":true, "color":"purple"}
         ];
 
         var unscheduled = [
@@ -70,7 +62,6 @@
                     
                     }
                     else {
-
                         dur = daysBetween( start, end);
                         markCells(tasks[i].trade, start, dur);
                         load.data[count - 1] = {id: count , text: tasks[i].name , unscheduled: false , start_date: formatFunc(start) , duration: dur+1, color: color[tasks[i].trade], order:10, parent: [tasks[i].trade]};
@@ -169,14 +160,6 @@
         
       }
 
-      
-
-    function oldrefresh() {
-      fill();
-
-      gantt.render();
-      underlineTasks();
-    }
 
     function refresh() {
         gantt.init("gantt_here");
