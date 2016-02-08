@@ -1,26 +1,26 @@
+		gantt.config.show_unscheduled = true;
+		
 		gantt.config.show_grid = false;
+
+		gantt.config.drag_progress = false;
+		gantt.config.drag_links = true;
+
+
+
+		var date_range = 6
 
 		var today = new Date();
 		var startOfWeek = getMonday(new Date());
-		var endOfWeek = new Date(startOfWeek.setDate(startOfWeek.getDate()+7));
+		var endOfWeek = new Date(startOfWeek.setDate(startOfWeek.getDate()+date_range));
 
 		var listOfStartDates = [];
 		var listOfEndDates = [];
 		
 
 		var zoom = true;
-		var toggle = false;
-
-
-
-
+		var collapse = true;
 
 		init();
-
-		function refresh() {
-			gantt.render();
-			gantt.refreshData();
-		}
 
 
 
@@ -32,7 +32,6 @@
 			gantt.config.end_date = endOfWeek;
 
 			refresh();
-
 		};
 
 		function right() {
@@ -42,22 +41,36 @@
 			gantt.config.start_date = startOfWeek;
 			gantt.config.end_date = endOfWeek;
 
-			refresh()
+			refresh();
 		};
 
 		function toggleTimeFrame() {
 
 			if(zoom) {
 				zoom = false;
+
+				var weekScaleTemplate = function(date){
+					var dateToStr = gantt.date.date_to_str("%d %M");
+					var endDate = gantt.date.add(gantt.date.add(date, 1, "week"), -1, "day");
+					return dateToStr(date) + " - " + dateToStr(endDate);
+				};
+				gantt.templates.date_scale = weekScaleTemplate;
+				date_range = 20;
+				gantt.config.scale_unit = "week";
 				startOfWeek.setDate(startOfWeek.getDate()-7);
 				endOfWeek.setDate(endOfWeek.getDate()+7);
-				gantt.config.scale_unit = "week"; 
-				gantt.config.date_scale = "Week #%W";
+				gantt.config.step = 1;
 			} else {
 				zoom = true;
+
+				gantt.templates.date_scale = null;
+				gantt.config.scale_unit = "day";
+				gantt.config.date_scale = "%F %d"; 
+				date_range = 6;
+
 				startOfWeek.setDate(startOfWeek.getDate()+7);
 				endOfWeek.setDate(endOfWeek.getDate()-7);
-				gantt.config.scale_unit= "day";
+				gantt.config.step = 1;
 			}
 
 			gantt.config.start_date = startOfWeek;
@@ -67,8 +80,7 @@
 
 		function mediaQuery() {
 			if(window.innerWidth < 800) {
-				gantt.config.scale_unit = "week"; 
-				gantt.config.date_scale = "Week %W";
+				toggleTimeFrame();
 			}
 		};
 
@@ -84,7 +96,9 @@
 			startOfWeek = getMonday(new Date());
 			gantt.config.start_date = startOfWeek;
 			gantt.config.end_date = endOfWeek;
-			mediaQuery();
+			
+
+			
 		};
 
 		gantt.templates.scale_cell_class = function(date){
@@ -93,6 +107,68 @@
     	};
 
     	gantt.templates.task_class = function(start, end, task){
+    		 
+        	 return task.color;
+    	};
+
+    	gantt.attachEvent("onTaskDblClick", function(id,e){
+		    
+		    if( gantt.getTask(id).open) { 
+		    	gantt.close(task.id)
+				trades[task.id-1].open = false;
+
+		    } else {
+				gantt.open(task.id);
+				trades[task.id-1].open = true;
+			}
+		});
+
+		gantt.attachEvent("onTaskClick", function(id,e){
+			task = gantt.getTask(id);
+
+			if(task.parent==0) {
+			    if( gantt.getTask(id).open) { 
+			    	gantt.close(id)
+			    	trades[task.id-1].open = false;
+			    } else {
+					gantt.open(task.id);
+					trades[task.id-1].open = true;
+				}
+			} else {taskFired(task);}
+			refresh();
+		});
+
+		function taskFired(task){
+			var id = task.id - underline.length;
+			alert(tasks[id].name);
+			alert(tasks[id].start);
+			alert(tasks[id].end);
+			$('#myModal').foundation('reveal', 'open');
+		}
+
+		function collapseTasks() {
+			if(collapse) {
+				gantt.eachTask(function(task){
+					if(task.parent==0) {
+					    gantt.open(task.id);
+					    trades[task.id-1].open = true;
+					}
+				});
+				collapse = false;				
+			} else {
+				gantt.eachTask(function(task){
+					if(task.parent==0) {
+				    	gantt.close(task.id)
+				    	trades[task.id-1].open = false;
+				    }
+				});
+				collapse = true;
+			}
+			refresh();
+		}
+    
+
+		gantt.templates.task_class = function(start, end, task){
     		 
         	 if(task.parent>0) {
         	 	parent = gantt.getTask(task.parent);
@@ -109,105 +185,15 @@
 
     	gantt.templates.task_row_class = function(start, end, task){ 
         	
+        	
         	if(task.parent>0) {
-        		parent = gantt.getTask(task.parent);
-
-	        	 if (parent.shrunk) {
-	        	 	return " shrunk";
-	        	 }
-	        	 else {
-	        	 	return "big";
-	        	 }
-	       	 } else { return " shrunk"; }
+        	 	
+	        	 	return task.color ;
+	        	 
+	       	 } else { 
+	       	 		return task.color + " parent_row";
+	       	 	 
+	       	 }
+	        	 
     	};
 
-    	gantt.templates.task_text=function(start,end,task){
-    		if(task.parent<1) {
-		    	return tasl.text;
-		    } else {return "<b> "+task.text+",<b> Active:</b> "+task.start_date + " / "+task.end_date;}
-		};
-
-    	gantt.attachEvent("onTaskDblClick", function(id,e){
-		    
-		    task = gantt.getTask(id);
-		    if( task.shrunk) { 
-		    	task.shrunk = false;
-		    } else {
-				task.shrunk = true;
-			}
-			refresh();
-		});
-
-		gantt.attachEvent("onTaskClick", function(id,e){
-
-			task = gantt.getTask(id);
-		    if( task.shrunk) { 
-		    	task.shrunk = false;
-		    } else {
-				task.shrunk = true;
-			}
-			refresh();
-		});
-
-		function collapse() {
-
-			if(toggle) {
-				gantt.eachTask(function(task){
-				    gantt.getTask(task.id).shrunk = true;
-				});
-				gantt.render();
-				toggle = false;
-				
-			} else {
-
-				gantt.eachTask(function(task){
-				    gantt.getTask(task.id).shrunk = false;
-				});
-				gantt.render();
-				toggle = true;
-				
-			}
-			refresh();
-		}
-
-		gantt.templates.leftside_text = function(start, end, task){
-    		return "<b>Priority: </b>" +task.priority;
-		};
-
-		function setProjects() {
-			gantt.eachTask(function(task){
-				if(task.parent != 0) {			
-					var calc = gantt.calculateEndDate(task.end_date, task.duration);
-
-					if(listOfStartDates[task.parent]<task.start_date || listOfStartDates[task.parent] == null) { listOfStartDates[task.parent]=task.start_date;}
-
-					if(listOfEndDates[task.parent]>calc || listOfEndDates[task.parent] == null) { 
-						
-						listOfEndDates[task.parent]=calc;
-					}
-				}
-			});
-			gantt.eachTask(function(task){
-				if(task.parent == 0) {			
-					task.start_date = listOfStartDates[task.id];
-					task.duration = gantt.calculateDuration(listOfStartDates[task.id], listOfEndDates[task.id]);
-					task.end_date = listOfEndDates[task.id];
-					console.log(task.end_date);	
-				}
-			});
-			refresh();
-		}
-
-		gantt.attachEvent("onTaskDrag", function(id, mode, task, original){
-		    
-		});
-
-		gantt.attachEvent("onTaskCreated", function(task){
-			
-		 gantt.open(task.id);
-		});
-
-		function reschedule() {
-			gantt.expand();
-			refresh();
-		}

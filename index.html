@@ -8,16 +8,17 @@
     <title>Gantt</title>
 
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    
 
     <link rel="stylesheet" href="lib/gantt/dhtmlxgantt.css">
     <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.css">
 
-    <script src="lib/angular/angular.min.js"></script>
 	<script src="lib/gantt/dhtmlxgantt.js"></script>
-	<script src="js/main.js"></script>
-	<script src="js/app.js"></script>
-	<script src="js/app.gantt.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+	
+
+	
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -26,8 +27,7 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body ng-controller="MainGanttCtrl">
-<div class="container">
+  <body>
     
 
 	
@@ -61,31 +61,46 @@
 
 	<div class="container">	
 	  <div class="row">
-		<button class="btn btn-default" onclick="collapse()">Collapse / Expand All</button>
-		<button class="btn btn-default" onclick="reschedule()">Schedule</button>
-		<button class="btn btn-default" onclick="toggleTimeFrame()">Toggle Time Frame</button>
-		<button class="btn btn-default" onclick="freshForm()">New Task</button>
+		<button class="button" onclick="collapseTasks()">Collapse / Expand All</button>
+		
+		<button class="button" onclick="toggleTimeFrame()">Toggle Time Frame</button>
+		<button class="button" onclick="freshForm()">New Task</button>
 		<div class="col-md-6">
-			<button class="btn btn-default" onclick="left()">Previous Week</button>
-			<button class="btn btn-default" onclick="right()">Next Week</button>
+			<button class="button" onclick="left()">Previous Week</button>
+			<button class="button" onclick="right()">Next Week</button>
 		</div>
 	  </div>
 	</div>
 
 </br>
 </br>
+	<div class="row">
+		<div id="gantt_here" style='width:70%; height:100px;'></div>
+		
 
-	<div data="tasks" dhx-gantt style="min-height:800px; width:90%;">
-		<div gantt-template="task_text">
-			<strong>{{task.text | uppercase}}</strong>
+	
+
+		<a href="#" data-reveal-id="myModal">Click Me For A Modal</a>
+
+		<div id="myModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+		  <h2 id="modalTitle">Awesome. I have it.</h2>
+		  <p class="lead">Your couch.  It is mine.</p>
+		  <p>I'm a cool paragraph that lives inside of an even cooler modal. Wins!</p>
+		  <a class="close-reveal-modal" aria-label="Close">&#215;</a>
 		</div>
 	</div>
-	<div class="space" id="table_div"></div>
-</div>
+
+
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.js"></script>
+
+    <script src="js/main.js"></script>
+	<script src="js/data.js"></script>
+	<script>
+	  $(document).foundation();
+	</script>
   </body>
 </html>
