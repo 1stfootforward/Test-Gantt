@@ -112,7 +112,6 @@
     	};
 
     	gantt.attachEvent("onTaskDblClick", function(id,e){
-		    
 		    if( gantt.getTask(id).open) { 
 		    	gantt.close(task.id)
 				trades[task.id-1].open = false;
@@ -140,10 +139,12 @@
 
 		function taskFired(task){
 			var id = task.id - underline.length;
-			alert(tasks[id].name);
-			alert(tasks[id].start);
-			alert(tasks[id].end);
+			$( "#modalTitle" ).html(tasks[id].name);
+			$( "#modalSDate" ).html(tasks[id].start);
+			$( "#modalEDate" ).html(tasks[id].end);
+			alert(trades[tasks[id].trade - 1].name);
 			$('#myModal').foundation('reveal', 'open');
+
 		}
 
 		function collapseTasks() {

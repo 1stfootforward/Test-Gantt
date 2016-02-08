@@ -54,7 +54,6 @@
             {"name":"Ecraft", "open":false, "color":"blue" },
             {"name":"Fletchers", "open":false, "color":"red"},
             {"name":"Plumb Co", "open":false, "color":"purple"}
-
         ];
 
         function daysBetween(one, another) {

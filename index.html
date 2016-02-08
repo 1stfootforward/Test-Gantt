@@ -1,65 +1,30 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="ganttApp">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Gantt</title>
 
-    <!-- Bootstrap -->
-    
+      
 
-    <link rel="stylesheet" href="lib/gantt/dhtmlxgantt.css">
+  	<link rel="stylesheet" href="lib/gantt/dhtmlxgantt.css">
     <link rel="stylesheet" href="styles/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.css">
-
-	<script src="lib/gantt/dhtmlxgantt.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+    
+    <link rel="stylesheet" href="styles/foundation.css">
+	
 	
 
 	
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <script src="js/vendor/modernizr.js"></script>
   </head>
   <body>
-    
-
-	
-
-	<form id="taskForm" class="row space">
-	 <div class="col-md-6">	
-	  <div class="form-group">
-	    <label for="nameInput">Task</label>
-	    <input type="text" class="form-control" id="nameInput" placeholder="">
-	  </div>
-	  <div class="form-group">
-	    <label for="resourceInput">Contractor</label>
-	    <input type="text" class="form-control" id="resourceInput" placeholder="">
-	  </div>
-	 </div> 
-	 <div class="col-md-6">	
-	  <div class="form-group">
-	    <label for="sdateInput">Start Date</label>
-	    <input type="datetime" class="form-control" id="sdateInput" placeholder="">
-	  </div>
-	  <div class="form-group">
-	    <label for="edateInput">End Date</label>
-	    <input type="datetime" class="form-control" id="edateInput" placeholder="">
-	  </div>
-	 </div> 
-	  
-	</form>
-	<button class="btn btn-primary" type="submit" onclick="formSubmit()">Submit</button>
 </br>
 </br>
 
-	<div class="container">	
+		
 	  <div class="row">
 		<button class="button" onclick="collapseTasks()">Collapse / Expand All</button>
 		
@@ -72,35 +37,38 @@
 	  </div>
 	</div>
 
-</br>
-</br>
+
 	<div class="row">
-		<div id="gantt_here" style='width:70%; height:100px;'></div>
-		
-
-	
-
-		<a href="#" data-reveal-id="myModal">Click Me For A Modal</a>
-
-		<div id="myModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
-		  <h2 id="modalTitle">Awesome. I have it.</h2>
-		  <p class="lead">Your couch.  It is mine.</p>
-		  <p>I'm a cool paragraph that lives inside of an even cooler modal. Wins!</p>
-		  <a class="close-reveal-modal" aria-label="Close">&#215;</a>
-		</div>
+		<div id="gantt_here" style='width:70%; height:100px;'></div>	
 	</div>
 
 
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.1.2/foundation.min.js"></script>
+<div id="myModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog" width:"400px">
+  <h2 id="modalTitle">Awesome. I have it.</h2>
+  <p id="modalContent" class="lead">Your couch.  It is mine.</p>
+  <p id="modalSDate">I'm a cool paragraph that lives inside of an even cooler modal. Wins!</p>
+  <p id="modalEDate">I'm a cool paragraph that lives inside of an even cooler modal. Wins!</p>
+  <p id="duration">I'm a cool paragraph that lives inside of an even cooler modal. Wins!</p>
+  <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+</div>
+
+
+	<script src="lib/gantt/dhtmlxgantt.js"></script>
+	<script src="js/vendor/jquery.js"></script>
+
+
 
     <script src="js/main.js"></script>
 	<script src="js/data.js"></script>
+
+
+	<script src="js/foundation.min.js"></script>
 	<script>
 	  $(document).foundation();
+
 	</script>
   </body>
+
+
 </html>
