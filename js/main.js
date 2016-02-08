@@ -79,8 +79,9 @@
 		};
 
 		function mediaQuery() {
-			if(window.innerWidth < 800) {
+			if(window.innerWidth < 1000) {
 				toggleTimeFrame();
+				$( ".gantt_task_scale" ).attr( "data-magellan-expedition", "fixed" );
 			}
 		};
 
@@ -138,6 +139,7 @@
 		});
 
 		function taskFired(task){
+
 			var id = task.id - underline.length;
 			$( "#modalTitle" ).html(tasks[id].name);
 			$( "#modalSDate" ).html(tasks[id].start);

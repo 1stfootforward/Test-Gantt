@@ -106,7 +106,7 @@
             }
 
             addUnscheduled();
-            height = (count*40);
+            height = (count*400);
             document.getElementById('gantt_here').setAttribute("style","height:"+height+"px");
 
         }
@@ -162,6 +162,7 @@
 
         underlineTasks();
         mediaQuery();
+        
 
         
       
@@ -211,6 +212,7 @@
         if(zoom) {
           underlineTasks();
         }
+        mediaQuery();
       }
 
       

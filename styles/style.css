@@ -73,3 +73,8 @@
 	border-radius: 50px;
 	width: 40px!important;
 }
+
+[data-magellan-expedition], [data-magellan-expedition-clone] {
+    padding: 0px!important;
+    z-index: 50;
+}
