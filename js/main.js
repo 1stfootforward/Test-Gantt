@@ -41,7 +41,6 @@
 		};
 
 		function toggleTimeFrame() {
-
 			if(zoom) {
 				zoom = false;
 
@@ -71,26 +70,14 @@
 
 			gantt.config.start_date = startOfWeek;
 			gantt.config.end_date = endOfWeek;
-			refresh();
+			alert("fire");
+			gantt.render();
 		};
 
 		function mediaQuery() {
-			if(window.innerWidth < 800) {
-				zoom = false;
 
-				var weekScaleTemplate = function(date){
-					var dateToStr = gantt.date.date_to_str("%d %M");
-					var endDate = gantt.date.add(gantt.date.add(date, 1, "week"), -1, "day");
-					return dateToStr(date) + " - " + dateToStr(endDate);
-				};
-				gantt.templates.date_scale = weekScaleTemplate;
-				date_range = 20;
-				gantt.config.scale_unit = "week";
-				startOfWeek.setDate(startOfWeek.getDate()-7);
-				endOfWeek.setDate(endOfWeek.getDate()+7);
-				gantt.config.step = 1;
-			
-				$( ".gantt_task_scale" ).attr( "data-magellan-expedition", "fixed" );
+			if(window.innerWidth < 1000) {
+				toggleTimeFrame();
 			}
 		};
 
@@ -101,13 +88,6 @@
 		  return new Date(d.setDate(diff));
 		};
 
-		function init() {
-			
-			
-			
-
-			
-		};
 
 		gantt.templates.scale_cell_class = function(date){
         	if(date.getDay()==0||date.getDay()==6){ return "weekend"; }

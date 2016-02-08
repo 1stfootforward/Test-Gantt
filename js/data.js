@@ -135,7 +135,6 @@
         gantt.parse(load);
 
         underlineTasks();
-        mediaQuery();
         
 
         
@@ -181,13 +180,17 @@
 
     function refresh() {
         gantt.init("gantt_here");
+
         fill();
         gantt.parse(load);
+
         if(zoom) {
           underlineTasks();
         }
-        mediaQuery();
+        
       }
+
+      mediaQuery();
 
       
 
