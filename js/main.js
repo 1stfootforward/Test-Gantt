@@ -1,8 +1,9 @@
 		gantt.config.show_unscheduled = true;
 		
 		gantt.config.show_grid = false;
-
+		gantt.config.drag_resize = false;
 		gantt.config.drag_progress = false;
+		gantt.config.drag_move = false;
 		gantt.config.drag_links = true;
 
 
@@ -18,7 +19,7 @@
 		gantt.config.end_date = endOfWeek;
 
 		var zoom = true;
-		var collapse = false;
+		var collapse = true;
 
 		function left() {
 			startOfWeek.setDate(startOfWeek.getDate()-7);
@@ -89,52 +90,23 @@
 
 
 		gantt.templates.scale_cell_class = function(date){
+			if(date.toDateString()==today.toDateString()){ return "today"; }
         	if(date.getDay()==0||date.getDay()==6){ return "weekend"; }
-        	if(date.toDateString()==today.toDateString()){ return "today"; }
+        	
     	};
 
-    	gantt.templates.task_class = function(start, end, task){
-    		 
-        	 return task.color;
-    	};
 
-    	gantt.attachEvent("onTaskDblClick", function(id,e){
-		    task = gantt.getTask(id);
 
-			if(task.parent==0) {
-			    if( gantt.getTask(id).open) { 
-			    	gantt.close(id)
-			    	trades[task.id-1].open = false;
-			    } else {
-					gantt.open(task.id);
-					trades[task.id-1].open = true;
-				}
-			} else {taskFired(task);}
-			refresh();
-		});
 
-		gantt.attachEvent("onTaskClick", function(id,e){
-			task = gantt.getTask(id);
-
-			if(task.parent==0) {
-			    if( gantt.getTask(id).open) { 
-			    	gantt.close(id)
-			    	trades[task.id-1].open = false;
-			    } else {
-					gantt.open(task.id);
-					trades[task.id-1].open = true;
-				}
-			} else {taskFired(task);}
-			refresh();
-		});
 
 		function taskFired(task){
 
 			var id = task.id - underline.length;
 			$( "#modalTitle" ).html(tasks[id].name);
+			$( "#modalContent" ).html(tasks[id].content);
 			$( "#modalSDate" ).html(tasks[id].start);
 			$( "#modalEDate" ).html(tasks[id].end);
-			alert(trades[tasks[id].trade - 1].name);
+			$( "#modalTrade" ).html(trades[tasks[id].trade - 1].name);
 			$('#myModal').foundation('reveal', 'open');
 
 		}

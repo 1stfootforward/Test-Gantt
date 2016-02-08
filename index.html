@@ -12,11 +12,7 @@
   	<link rel="stylesheet" href="lib/gantt/dhtmlxgantt.css">
     <link rel="stylesheet" href="styles/style.css">
     
-    <link rel="stylesheet" href="styles/foundation.css">
-	
-	
-
-	
+    <link rel="stylesheet" href="styles/foundation.css">	
 
     <script src="js/vendor/modernizr.js"></script>
   </head>
@@ -24,11 +20,12 @@
 
 	<div class="row">
 	  <button class="button small-3 columns" onclick="left()">Previous Week</button>
-	  <button class="button small-3 columns" onclick="collapseTasks()">Collapse / Expand All</button>
+	  <button class="secondary hollow button small-3 columns" onclick="collapseTasks()">Collapse / Expand All</button>
 		
-		<button class="button small-3 columns" onclick="toggleTimeFrame()">Toggle Time Frame</button>
+		<button class="secondary hollow button hollow small-3 columns" onclick="toggleTimeFrame()">Toggle Time Frame</button>
 	  <button class="button small-3 columns" onclick="right()">Next Week</button>
 	</div>
+	
 	<div class="row">
 		<div id="gantt_here" style=' width:300px; height:100px;'></div>	
 	</div>
@@ -36,11 +33,11 @@
 
 
 <div id="myModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog" width:"400px">
-  <h2 id="modalTitle">Awesome. I have it.</h2>
-  <p id="modalContent" class="lead">Your couch.  It is mine.</p>
-  <p id="modalSDate">I'm a cool paragraph that lives inside of an even cooler modal. Wins!</p>
-  <p id="modalEDate">I'm a cool paragraph that lives inside of an even cooler modal. Wins!</p>
-  <p id="duration">I'm a cool paragraph that lives inside of an even cooler modal. Wins!</p>
+  <h2 id="modalTitle"></h2>
+  <p id="modalContent" class="lead"></p>
+  <p id="modalSDate"></p>
+  <p id="modalEDate"></p>
+  <p id="modalTrade"></p>
   <a class="close-reveal-modal" aria-label="Close">&#215;</a>
 </div>
 
