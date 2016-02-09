@@ -165,11 +165,11 @@
 
         fill();
         gantt.parse(load);
-
+        gantt.render();
         if(zoom) {
           underlineTasks();
         }
-        gantt.render();
+        
       }
 
       mediaQuery();

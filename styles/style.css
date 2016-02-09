@@ -47,11 +47,12 @@
 
 
 .project {
-		opacity: 0.4!important;
+		opacity: 0.6!important;
 		border-top: 1px solid;
     	border-radius: 0px;
     	height: 100%
 }
+
 
 .project .task_right, .project .task_left, .project .gantt_drag_progress, .gantt_message_area {
 	display: none;
