@@ -8,7 +8,7 @@
 	.gantt_task_line, .gantt_task_progress {
 	    border: none;
     	border-radius: 5px;
-    	height: 80%
+    	height: 40%
 	}
 
 	.gantt_task_cell, .gantt_scale_cell {
@@ -24,7 +24,7 @@
 	}
 
 	.gantt_task_row, .gantt_row {
-	    opacity: 0.2;
+	    opacity: 0.8;
 	}
 
 	.gantt_row.odd, .gantt_task_row.odd {
@@ -32,8 +32,6 @@
 		}
 
 	.gantt_task_line, .gantt_project {
-	    padding-top: 3px;
-	    padding-bottom: 3px;
 	}
 
 	.blue {background-color:#3366CC !important;}
@@ -52,22 +50,24 @@
     	border-radius: 0px;
     	height: 100%
 }
-
+	
+	.gantt_task_line.project {
+    	height: 33px!important;
+	}
 
 .project .task_right, .project .task_left, .project .gantt_drag_progress, .gantt_message_area {
 	display: none;
 }
 
-.gantt_ .task_scale {
-	top: 0px;
-	position: fixed;
-	z-index: 1;
-}
 
 .shade {
-	border-bottom: 10px solid!important;
-	border-color: black!important;
+	border-bottom: 4px solid!important;
 	opacity: 1!important;
+	background:rgba(255,255,255,1)!important;
+}
+
+.parent_row .gantt_task_cell {
+	background:rgba(255,255,255,1)!important;
 }
 
 .gantt_task_line.unscheduled {
@@ -75,8 +75,24 @@
 	width: 40px!important;
 }
 
+.lighten {
+	opacity: 0.4;
+}
+
 
 [data-magellan-expedition], [data-magellan-expedition-clone] {
     padding: 0px!important;
     z-index: 50;
+}
+
+.rightArrow {
+    color: white;
+    font-size: 35px;
+    text-align: center;
+}
+
+.leftArrow {
+    color: white;
+    font-size: 35px;
+    text-align: center;
 }

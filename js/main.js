@@ -8,6 +8,8 @@
 
 
 
+
+
 		var date_range = 6
 
 		var today = new Date();
@@ -71,7 +73,7 @@
 
 			gantt.config.start_date = startOfWeek;
 			gantt.config.end_date = endOfWeek;
-			gantt.render();
+			refresh();
 		};
 
 		function mediaQuery() {
@@ -107,6 +109,25 @@
 			$( "#modalSDate" ).html(tasks[id].start);
 			$( "#modalEDate" ).html(tasks[id].end);
 			$( "#modalTrade" ).html(trades[tasks[id].trade - 1].name);
+			$('#myModal').foundation('reveal', 'open');
+
+		}
+
+		function unscheduledFire(id){
+
+
+			$( "#modalTitle" ).html(trades[id].name);
+
+			var str = "";
+			for (var i = unscheduled.length - 1; i >= 0; i--) {
+				if(unscheduled[i].trade == id) {
+					str = str + " <p class='lead'>" + unscheduled[i].name + "</p><p> Task description</p>";
+				}
+			};
+			$( "#modalContent" ).html(str);
+			$( "#modalSDate" ).html(" ");
+			$( "#modalEDate" ).html(" ");
+			$( "#modalTrade" ).html(" ");
 			$('#myModal').foundation('reveal', 'open');
 
 		}
@@ -151,14 +172,14 @@
     	gantt.templates.task_row_class = function(start, end, task){ 
         	
         	
-        	if(task.parent>0) {
-        	 	
-	        	 	return task.color ;
+        	 if(task.parent>0) {
+	        	 	return task.color + " lighten " + task.direction;
 	        	 
 	       	 } else { 
 	       	 		return task.color + " parent_row";
 	       	 	 
 	       	 }
+	       	 
 	        	 
     	};
 

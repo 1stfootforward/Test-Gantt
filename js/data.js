@@ -6,6 +6,7 @@
         var duration;
         var early = new Date();
         var count;
+        var removeHeight;
         early.setYear(early.getFullYear()-1);
         
         var load =  {data:[],links:[]};
@@ -13,8 +14,10 @@
         var tasks = [
             {"content":"Description of task","name":"Task One Name", "start":"02-09-2016", "end":"02-11-2016", "trade":1},
             {"content":"Description of task","name":"Task Two", "start":"02-09-2016", "end":"02-14-2016", "trade":3},
-            {"content":"Description of task","name":"Task Three", "start":"02-11-2017", "end":"02-13-2017", "trade":2},
+            {"content":"Description of task","name":"Task Three", "start":"02-11-2016", "end":"02-13-2016", "trade":2},
             {"content":"Description of task","name":"Task Four", "start":"02-01-2016", "end":"02-14-2016", "trade":2},
+            {"content":"Description of task","name":"Task Four", "start":"02-01-2017", "end":"02-14-2017", "trade":2},
+            {"content":"Description of task","name":"Task Four", "start":"02-01-2015", "end":"02-14-2015", "trade":2},
             {"content":"Description of task","name":"Task Five", "start":"01-11-2016", "end":"02-13-2016", "trade":2}] ;
 
         var trades = [
@@ -24,14 +27,14 @@
         ];
 
         var unscheduled = [
-            {"name":"Bob", "trade":1},
-            {"name":"Doug", "trade":1},
-            {"name":"Bob", "trade":2},
-            {"name":"Doug", "trade":2},
-            {"name":"Doug", "trade":1},
-            {"name":"Bob", "trade":3},
-            {"name":"Doug", "trade":3},
-            {"name":"Sam", "trade":1}
+            {"name":"Unscheduled One", "trade":1},
+            {"name":"Unscheduled Two", "trade":1},
+            {"name":"Unscheduled Three", "trade":2},
+            {"name":"Unscheduled Four", "trade":2},
+            {"name":"Unscheduled Five", "trade":1},
+            {"name":"Unscheduled Six", "trade":3},
+            {"name":"Unscheduled Seven", "trade":3},
+            {"name":"Unscheduled Eight", "trade":1}
         ];
 
 
@@ -44,12 +47,13 @@
 		function fill() {
 
             underline.length = 0;
-
+            removeHeight=0;
             count = 1;
+            var side = "";
 
             for (var i in trades) {
                 c = i + 1;
-                load.data[i] = {id: count , text: trades[i].name ,  start_date: early, duration:9999, parent: 0, color: trades[i].color, order:10, open: trades[i].open};
+                load.data[i] = {id: count , text: trades[i].name ,  start_date: early, duration:9999, parent: 0, color: trades[i].color, order:10, open: trades[i].open, direction: ""};
                 color[count] = trades[i].color;
                 count++;
             }
@@ -58,20 +62,21 @@
                 var end = new Date(tasks[i].end);
 
                     if(start > endOfWeek || end < startOfWeek ) {
-                        load.data[count - 1] = {id: count , text: tasks[i].name , unscheduled:true , start_date: early , duration: 9999, color: color[tasks[i].trade], order:10, parent: [tasks[i].trade]};
-                    
+                        if(start > endOfWeek){side = "rightArrow";}else{side = "leftArrow"}
+                        load.data[count - 1] = {id: count , text: tasks[i].name , unscheduled:true , start_date: early , duration: 9999, color: color[tasks[i].trade], order:10, parent: [tasks[i].trade], direction: side};
+                        
                     }
                     else {
                         dur = daysBetween( start, end);
                         markCells(tasks[i].trade, start, dur);
-                        load.data[count - 1] = {id: count , text: tasks[i].name , unscheduled: false , start_date: formatFunc(start) , duration: dur+1, color: color[tasks[i].trade], order:10, parent: [tasks[i].trade]};
+                        load.data[count - 1] = {id: count , text: tasks[i].name , unscheduled: false , start_date: formatFunc(start) , duration: dur+1, color: color[tasks[i].trade], order:10, parent: [tasks[i].trade], direction: ""};
   
                     }
                 count++;
             }
 
             addUnscheduled();
-            height = (count*40);
+            height = ((count - removeHeight )*40);
             document.getElementById('gantt_here').setAttribute("style","height:"+height+"px");
 
         }
@@ -117,7 +122,7 @@
         }
 
 
-        
+        grabTasks();
 
         gantt.init("gantt_here");
         fill();
@@ -125,16 +130,9 @@
         gantt.parse(load);
 
         underlineTasks();
-        
 
-        
-      
-
-		
 
      function underlineCells(id, color) {
-
-
         var list = underline[id];
         if(list != undefined) {
           for (var i = 0; i < list.length; i++) {
@@ -144,6 +142,7 @@
             }
           };
         }
+
       }
 
       function underlineTasks() {
@@ -162,15 +161,14 @@
 
     function refresh() {
         gantt.init("gantt_here");
-
         fill();
         gantt.parse(load);
         gantt.render();
-        if(zoom) {
-          underlineTasks();
-        }
+
+        if(zoom) { underlineTasks();}
+        arrows();
         
-      }
+    }
 
       mediaQuery();
 
@@ -203,8 +201,44 @@
           trades[task.id-1].open = true;
           refresh();
         }
-      } else {taskFired(task);}
+      } else {
+              if(task.text.length == 3) 
+                {unscheduledFire(task.parent);} else {taskFired(task);}
+
+              
+          }
     });
 
-      
+function arrows() {   
+  $( ".rightArrow .gantt_last_cell" ).each(function( index ) {
+     $( this ).html( "<sup> > </sup> " );
+  });
+  $( ".leftArrow" ).each(function( index ) {
+     $( this ).children().eq(0).html( "<sup> < </sup> " );
+  }); 
+}
+
+function grabTasks() {
+
+  $( ".incomplete" ).each(function( index ) {
+
+    var string = $( this ).text();
+    var name = string.substring(0, string.indexOf("Starts"));
+    var start = string.substring(string.indexOf("Starts")+7, string.indexOf("|"));
+    var end = string.substring(string.indexOf("Ends")+5);
+
+    if(start = "Not Specified") {
+      unscheduled[index].name = name;
+      unscheduled[index].trade = 0;
+    } else {
+      tasks[index].name = name;
+      tasks[index].start = start;
+      tasks[index].end = end;
+      tasks[index].trade = 0;
+    }
+
+
+  });
+}
+
 
