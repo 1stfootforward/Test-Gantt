@@ -16,8 +16,10 @@
             {"content":"Description of task","name":"Task Two", "start":"02-09-2016", "end":"02-14-2016", "trade":3},
             {"content":"Description of task","name":"Task Three", "start":"02-11-2016", "end":"02-13-2016", "trade":2},
             {"content":"Description of task","name":"Task Four", "start":"02-01-2016", "end":"02-14-2016", "trade":2},
+            {"content":"Description of task","name":"Task six", "start":"02-1-2016", "end":"02-6-2016", "trade":2},
+            {"content":"Description of task","name":"Task seven", "start":"02-18-2016", "end":"02-22-2016", "trade":3},
             {"content":"Description of task","name":"Task Four", "start":"02-01-2017", "end":"02-14-2017", "trade":2},
-            {"content":"Description of task","name":"Task Four", "start":"02-01-2015", "end":"02-14-2015", "trade":2},
+            {"content":"Description of task","name":"Task eight", "start":"02-01-2015", "end":"02-14-2015", "trade":2},
             {"content":"Description of task","name":"Task Five", "start":"01-11-2016", "end":"02-13-2016", "trade":2}] ;
 
         var trades = [
