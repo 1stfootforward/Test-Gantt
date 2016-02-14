@@ -7,10 +7,8 @@
     gantt.config.drag_links = false;
     gantt.config.min_column_width = 1;
 
-    var buttonGrid = "<div class='row gchart' ><a class='button small-3 columns' onclick='left()'><i class='fi-arrow-left'></i></a><a class='secondary hollow button small-2 columns' onclick='collapseTasks()'><i id='collapse' class='fi-arrows-compress'></i></a><a class='secondary hollow button small-2 columns' onclick='chronologicalToggle()'><i id='chrono' class='fi-indent-more'></i></a><a class='secondary hollow button small-2 columns' onclick='toggleTimeFrame()'><i id='time' class='fi-calendar'></i></a><a class='button small-3 columns' onclick='right()'><i class='fi-arrow-right'></i></a></div><div id='gantt_here' style=' width:300px; height:100px;'></div></div>";
-
+    var buttonGrid = "<ul class='button-group round even-5 gchart' ><li><a class='button' onclick='left()'><i class='fi-arrow-left'></i></a></li><li><a class='secondary hollow button' onclick='collapseTasks()'><i id='collapse' class='fi-arrows-compress'></i></a></li><li><a class='secondary hollow button' onclick='chronologicalToggle()'><i id='chrono' class='fi-indent-more'></i></a></li><li><a class='secondary hollow button' onclick='toggleTimeFrame()'><i id='time' class='fi-calendar'></i></a></li><li><a class='button' onclick='right()'><i class='fi-arrow-right'></i></a></ul><div id='gantt_here' style=' width:300px; height:100px;'></div></div>";
     $( "#gantt_here" ).parent().html(buttonGrid);
-
 
     var date_range = 6
 
@@ -27,8 +25,8 @@
     var chronological = false;
 
     		var str = "";
-			var startH = "<div class='row'><div class='small-12 medium-5 columns'>";
-			var middleH = "</div><div class='small-12 medium-5 columns'>";
+			var startH = "<br /><div class='row'><div class='small-12 medium-6 columns'>";
+			var middleH = "</div><div class='small-12 medium-6 columns'>";
 			var endH = "</div></div> </br>"
 
 		function chronologicalToggle() {
@@ -82,7 +80,7 @@
 
 				gantt.templates.date_scale = null;
 				gantt.config.scale_unit = "day";
-				gantt.config.date_scale = "%F %d"; 
+				gantt.config.date_scale = "%M %d"; 
 				date_range = 6;
 
 				startOfWeek.setDate(startOfWeek.getDate()+7);
@@ -163,9 +161,9 @@
 			var i = task.id - 1
 			if(!chronological) { i = i - trades.length; }
 
-			var button = "</p> <p><a class='primary hollow button columns' href=" + tasks[i].action + ">View</a>"
+			var button = "</p> <p><a class='primary hollow button columns' href=" + tasks[i].action + ">View</a>" 
 
-			str = str + startH + " <p class='lead'>" + tasks[i].name + "</p><p>" + tasks[i].content + "</p><p>" + format(tasks[i].start) + "</p>" + middleH + "<p>" + tasks[i].contractor + "</p><p>" + trades[tasks[i].trade - 1].name + "</p><p>" + format(tasks[i].end) + "</p>" + endH + button  ;
+			str = str + startH + " <p class='lead'>" + tasks[i].name + "</p><p>" + tasks[i].content + "</p>" + middleH + "<p>" + tasks[i].contractor + "</p><p>" + trades[tasks[i].trade - 1].name + "</p> </div></div><div class='row'><div class='small-12 medium-6 columns'><p> <b>Start: </b> " + format(tasks[i].start) + "</p>" + middleH + "<p> <b>End: </b> " + format(tasks[i].end) + "</p>" + endH + button  ;
 
 			$( "#modalTitle" ).html(tasks[i].name);
 			$( "#modalContent" ).html(str);

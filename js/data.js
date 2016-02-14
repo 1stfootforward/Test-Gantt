@@ -233,7 +233,7 @@
 
     gantt.attachEvent("onTaskDblClick", function(id,e){
       task = gantt.getTask(id);
-      if(task.parent==0) {
+      if(task.parent==0 && task.order != 40) {
           if( gantt.getTask(id).open) { 
             gantt.close(id)
             trades[task.id-1].open = false;
@@ -245,7 +245,7 @@
           refresh();
         }
       } else {
-        if(task.text.length == 3) {
+        if(task.order == 50) {
           unscheduledFire(task.parent);} 
         else {taskFired(task);}           
       }

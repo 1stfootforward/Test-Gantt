@@ -121,3 +121,9 @@
 	line-height: 35px!important;
 	font-size: 12px!important;
 }
+
+.button-group {
+	width: 100%!important;
+	text-align: center!important;
+	margin-left: 7px!important;
+}
