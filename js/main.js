@@ -223,7 +223,7 @@
 
 		gantt.templates.task_class = function(start, end, task){
 
-			if(chronological) { return task.color + " chrono_task lighten"}
+			if(chronological) { return task.color + " chrono_task"}
     		 
         	 if(task.parent>0) {
         	 	parent = gantt.getTask(task.parent);
