@@ -11,8 +11,9 @@
     	height: 40%
 	}
 
-	.gantt_task_cell, .gantt_scale_cell {
-		border-right: 1px solid white!important;
+
+	.gantt_last_cell {
+		border-right: none!important;
 	}
 
 	.gantt_task_row.gantt_selected {
@@ -34,12 +35,12 @@
 	.gantt_task_line, .gantt_project {
 	}
 
-	.blue {background-color:#3366CC !important;}
-	.red {background-color: #DC3912 !important;}
-	.orange {background-color: #FF9900 !important;}
-	.green {background-color: #109618 !important;}
-	.purple {background-color: #990099 !important;}
-	.navy {background-color: #3B3EAC !important;}
+	.gantt_blue {background-color:#3366CC !important;}
+	.gantt_red {background-color: #DC3912 !important;}
+	.gantt_orange {background-color: #FF9900 !important;}
+	.gantt_green {background-color: #109618 !important;}
+	.gantt_purple {background-color: #990099 !important;}
+	.gantt_navy {background-color: #3B3EAC !important;}
 
 
 
@@ -72,7 +73,8 @@
 
 .gantt_task_line.unscheduled {
 	border-radius: 50px;
-	width: 40px!important;
+	width: 110px!important;
+	opacity: 0.6;
 }
 
 .lighten {
@@ -95,4 +97,27 @@
     color: white;
     font-size: 35px;
     text-align: center;
+}
+
+.dark {
+	color: grey!important;
+}
+
+.gchart a {
+	height: 35px;
+	padding-top: 10px!important;
+	line-height: 16px!important;
+	font-size: 16px;
+	margin-bottom: 1px!important;
+}
+
+.scale_gone {
+	display: none!important;
+	height: 0px!important;
+}
+
+.scale_stay {
+	height: 35px!important;
+	line-height: 35px!important;
+	font-size: 12px!important;
 }

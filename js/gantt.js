@@ -1,8 +1,193 @@
+		gantt.config.show_unscheduled = true;
+		
+		gantt.config.show_grid = false;
+		gantt.config.drag_resize = false;
+		gantt.config.drag_progress = false;
+		gantt.config.drag_move = false;
+		gantt.config.drag_links = true;
+
+
+
+
+
+		var date_range = 6
+
+		var today = new Date();
+		var startOfWeek = getMonday(new Date());
+		var endOfWeek = new Date(startOfWeek.setDate(startOfWeek.getDate()+date_range));
+
+		startOfWeek = getMonday(new Date());
+		gantt.config.start_date = startOfWeek;
+		gantt.config.end_date = endOfWeek;
+
+		var zoom = true;
+		var collapse = true;
+
+		function left() {
+			startOfWeek.setDate(startOfWeek.getDate()-7);
+			endOfWeek.setDate(endOfWeek.getDate()-7);
+
+			gantt.config.start_date = startOfWeek;
+			gantt.config.end_date = endOfWeek;
+
+			refresh();
+		};
+
+		function right() {
+			startOfWeek.setDate(startOfWeek.getDate()+7);
+			endOfWeek.setDate(endOfWeek.getDate()+7);
+
+			gantt.config.start_date = startOfWeek;
+			gantt.config.end_date = endOfWeek;
+
+			refresh();
+		};
+
+		function toggleTimeFrame() {
+			if(zoom) {
+				zoom = false;
+
+				var weekScaleTemplate = function(date){
+					var dateToStr = gantt.date.date_to_str("%d %M");
+					var endDate = gantt.date.add(gantt.date.add(date, 1, "week"), -1, "day");
+					return dateToStr(date) + " - " + dateToStr(endDate);
+				};
+				gantt.templates.date_scale = weekScaleTemplate;
+				date_range = 20;
+				gantt.config.scale_unit = "week";
+				startOfWeek.setDate(startOfWeek.getDate()-7);
+				endOfWeek.setDate(endOfWeek.getDate()+7);
+				gantt.config.step = 1;
+			} else {
+				zoom = true;
+
+				gantt.templates.date_scale = null;
+				gantt.config.scale_unit = "day";
+				gantt.config.date_scale = "%F %d"; 
+				date_range = 6;
+
+				startOfWeek.setDate(startOfWeek.getDate()+7);
+				endOfWeek.setDate(endOfWeek.getDate()-7);
+				gantt.config.step = 1;
+			}
+
+			gantt.config.start_date = startOfWeek;
+			gantt.config.end_date = endOfWeek;
+			refresh();
+		};
+
+		function mediaQuery() {
+
+			if(window.innerWidth < 1000) {
+				toggleTimeFrame();
+			}
+		};
+
+		function getMonday(d) {
+		  d = new Date(d);
+		  var day = d.getDay(),
+		      diff = d.getDate() - day + (day == 0 ? -6:1); // adjust when day is sunday
+		  return new Date(d.setDate(diff));
+		};
+
+
+		gantt.templates.scale_cell_class = function(date){
+			if(date.toDateString()==today.toDateString()){ return "today"; }
+        	if(date.getDay()==0||date.getDay()==6){ return "weekend"; }
+        	
+    	};
+
+
+
+
+
+		function taskFired(task){
+
+			var id = task.id - underline.length;
+			$( "#modalTitle" ).html(tasks[id].name);
+			$( "#modalContent" ).html(tasks[id].content);
+			$( "#modalSDate" ).html(tasks[id].start);
+			$( "#modalEDate" ).html(tasks[id].end);
+			$( "#modalTrade" ).html(trades[tasks[id].trade - 1].name);
+			$('#myModal').foundation('reveal', 'open');
+
+		}
+
+		function unscheduledFire(id){
+
+
+			$( "#modalTitle" ).html(trades[id].name);
+
+			var str = "";
+			for (var i = unscheduled.length - 1; i >= 0; i--) {
+				if(unscheduled[i].trade == id) {
+					str = str + " <p class='lead'>" + unscheduled[i].name + "</p><p> Task description</p>";
+				}
+			};
+			$( "#modalContent" ).html(str);
+			$( "#modalSDate" ).html(" ");
+			$( "#modalEDate" ).html(" ");
+			$( "#modalTrade" ).html(" ");
+			$('#myModal').foundation('reveal', 'open');
+
+		}
+
+		function collapseTasks() {
+			if(collapse) {
+				gantt.eachTask(function(task){
+					if(task.parent==0) {
+					    gantt.open(task.id);
+					    trades[task.id-1].open = true;
+					}
+				});
+				collapse = false;				
+			} else {
+				gantt.eachTask(function(task){
+					if(task.parent==0) {
+				    	gantt.close(task.id)
+				    	trades[task.id-1].open = false;
+				    }
+				});
+				collapse = true;
+			}
+			refresh();
+		}
+    
+
+		gantt.templates.task_class = function(start, end, task){
+    		 
+        	 if(task.parent>0) {
+        	 	parent = gantt.getTask(task.parent);
+	        	 if (parent.shrunk) {
+	        	 	return task.color + " shrunk";
+	        	 }
+	        	 else {
+	        	 	return task.color + " big";
+	        	 }
+	       	 } else { return task.color + " project"; }
+
+        	 	
+    	};
+
+    	gantt.templates.task_row_class = function(start, end, task){ 
+        	
+        	
+        	 if(task.parent>0) {
+	        	 	return task.color + " lighten " + task.direction;
+	        	 
+	       	 } else { 
+	       	 		return task.color + " parent_row";
+	       	 	 
+	       	 }
+	       	 
+	        	 
+    	};
+
+
         
         
         var formatFunc = gantt.date.date_to_str("%d/%m/%Y");
         var color = [];
-        var listOfColors = ["gantt_blue","gantt_red","gantt_orange","gantt_green","gantt_purple","gantt_navy"];
         var underline = [];
         var duration;
         var early = new Date();
@@ -12,11 +197,7 @@
         
         var load =  {data:[],links:[]};
 
-        var tradeCat = [];
-
-        var tasks = [];
-
-        var oldtasks = [
+        var tasks = [
             {"content":"Description of task","name":"Task One Name", "start":"02-09-2016", "end":"02-11-2016", "trade":1},
             {"content":"Description of task","name":"Task Two", "start":"02-09-2016", "end":"02-14-2016", "trade":3},
             {"content":"Description of task","name":"Task Three", "start":"02-11-2016", "end":"02-13-2016", "trade":2},
@@ -27,11 +208,13 @@
             {"content":"Description of task","name":"Task eight", "start":"02-01-2015", "end":"02-14-2015", "trade":2},
             {"content":"Description of task","name":"Task Five", "start":"01-11-2016", "end":"02-13-2016", "trade":2}] ;
 
-        var trades = [];
+        var trades = [
+            {"name":"Trade Category One", "open":false, "color":"blue" },
+            {"name":"Trade Category Two", "open":false, "color":"red"},
+            {"name":"Trade Category Three", "open":false, "color":"purple"}
+        ];
 
-        var unscheduled = [];
-
-        var oldUnscheduled = [
+        var unscheduled = [
             {"name":"Unscheduled One", "trade":1},
             {"name":"Unscheduled Two", "trade":1},
             {"name":"Unscheduled Three", "trade":2},
@@ -56,37 +239,15 @@
             count = 1;
             var side = "";
 
-
-            
-            if (trades.length==0 || chronological == true) {
-              addTasksChronologically();
-            } else{
-              addTrades();
-              addTasks();
-              addUnscheduled();
-            }
-            
-
-            
-            height = ((count - removeHeight )*40);
-            document.getElementById('gantt_here').setAttribute("style","height:"+height+"px");
-
-        }
-
-        function addTrades() {
             for (var i in trades) {
                 c = i + 1;
                 load.data[i] = {id: count , text: trades[i].name ,  start_date: early, duration:9999, parent: 0, color: trades[i].color, order:10, open: trades[i].open, direction: ""};
                 color[count] = trades[i].color;
                 count++;
             }
-        }
-
-        function addTasks() {
-          
-          for (var i in tasks) {
-                var start = tasks[i].start;
-                var end = tasks[i].end;
+            for (var i in tasks) {
+                var start = new Date(tasks[i].start);
+                var end = new Date(tasks[i].end);
 
                     if(start > endOfWeek || end < startOfWeek ) {
                         if(start > endOfWeek){side = "rightArrow";}else{side = "leftArrow"}
@@ -102,26 +263,10 @@
                 count++;
             }
 
-        }
+            addUnscheduled();
+            height = ((count - removeHeight )*40);
+            document.getElementById('gantt_here').setAttribute("style","height:"+height+"px");
 
-        function addTasksChronologically() { 
-          for (var i in tasks) {
-                var start = tasks[i].start;
-                var end = tasks[i].end;
-
-                    if(start > endOfWeek || end < startOfWeek ) {
-                        if(start > endOfWeek){side = "rightArrow";}else{side = "leftArrow"}
-                        load.data[count - 1] = {id: count , text: tasks[i].name , unscheduled:true , start_date: early , duration: 9999, color: color[tasks[i].trade], order:40, direction: side};
-                        
-                    }
-                    else {
-                        dur = daysBetween( start, end);
-                        markCells(tasks[i].trade, start, dur);
-                        load.data[count - 1] = {id: count , text: tasks[i].name , unscheduled: false , start_date: formatFunc(start) , duration: dur+1, color: color[tasks[i].trade], order:40, direction: ""};
-  
-                    }
-                count++;
-            }
         }
 
         function addUnscheduled() {
@@ -133,11 +278,8 @@
           };
           
           for (var i = groups.length - 1; i > 0; i--) {
-            if(typeof groups[i] != 'undefined') {
-              load.data[count - 1] = {id: count , text: "+ " + groups[i] + " Unscheduled" , unscheduled: false , start_date: startOfWeek , duration: 1, color: "unscheduled "+color[i], order:50, parent: i};
-              count++;
-            }
-            
+            load.data[count - 1] = {id: count , text: "+ " + groups[i] , unscheduled: false , start_date: startOfWeek , duration: 1, color: "unscheduled "+color[i], order:10, parent: i};
+            count++;
           };
         }
 
@@ -170,16 +312,12 @@
 
         grabTasks();
 
-
-
         gantt.init("gantt_here");
         fill();
 
         gantt.parse(load);
 
         underlineTasks();
-
-        arrows();
 
 
      function underlineCells(id, color) {
@@ -210,28 +348,35 @@
 
 
     function refresh() {
-        gantt.clearAll();
-        load.data.length = 0;
-
         gantt.init("gantt_here");
         fill();
         gantt.parse(load);
         gantt.render();
-        $( ".gantt_scale_line:eq( 1 )" ).addClass("scale_gone");
-        $( ".gantt_scale_line:eq( 0 )" ).addClass("scale_stay");
-        
-        if (chronological) {
-          arrowsDark();
-        } else {
-          underlineTasks();
-          arrows();
-        }
+
+        if(zoom) { underlineTasks();}
+        arrows();
         
     }
 
       mediaQuery();
 
     gantt.attachEvent("onTaskDblClick", function(id,e){
+        task = gantt.getTask(id);
+
+      if(task.parent==0) {
+          if( gantt.getTask(id).open) { 
+            gantt.close(id)
+            trades[task.id-1].open = false;
+            refresh();
+          } else {
+          gantt.open(task.id);
+          trades[task.id-1].open = true;
+          refresh();
+        }
+      } else {taskFired(task);}
+    });
+
+    gantt.attachEvent("onTaskClick", function(id,e){
       task = gantt.getTask(id);
       if(task.parent==0) {
           if( gantt.getTask(id).open) { 
@@ -245,31 +390,11 @@
           refresh();
         }
       } else {
-        if(task.text.length == 3) {
-          unscheduledFire(task.parent);} 
-        else {taskFired(task);}           
-      }
-    });
+              if(task.text.length == 3) 
+                {unscheduledFire(task.parent);} else {taskFired(task);}
 
-    gantt.attachEvent("onTaskClick", function(id,e){
-
-      task = gantt.getTask(id);
-      if(task.parent==0 && task.order != 40) {
-          if( gantt.getTask(id).open) { 
-            gantt.close(id)
-            trades[task.id-1].open = false;
-            refresh();
-          } else {
-
-          gantt.open(task.id);
-          trades[task.id-1].open = true;
-          refresh();
-        }
-      } else {
-        if(task.order == 50) {
-          unscheduledFire(task.parent);} 
-        else {taskFired(task);}           
-      }
+              
+          }
     });
 
 function arrows() {   
@@ -281,108 +406,29 @@ function arrows() {
   }); 
 }
 
-function arrowsDark() {   
-  $( ".rightArrow .gantt_last_cell" ).each(function( index ) {
-     $( this ).html( "<sup class='dark'> > </sup> " );
-  });
-  $( ".leftArrow" ).each(function( index ) {
-     $( this ).children().eq(0).html( "<sup class='dark'> < </sup> " );
-  }); 
-}
-
-function dateReorg(string) {
-    var d = string.substring(0, 2);
-    var m = string.substring(3, 5);
-    var y = string.substring(6, 10);
-
-    return (new Date(m+'/'+d+'/'+y));
-}
-
-
-
-function setTrade(trade) {
-  
-  if(tradeCat.length > 0) {
-    for (var i = 0; i < tradeCat.length; i++) {
-        if(tradeCat[i] == trade) {
-
-          return i;
-        }
-    };
-  
-    tradeCat[tradeCat.length] = trade;
-    return tradeCat.length-1;
-  } 
-  tradeCat[0] = trade;
-  return 0;
-}
-
 function grabTasks() {
-
-  var carryOver = 0;
 
   $( ".incomplete" ).each(function( index ) {
 
-    addToList(this , index);
-    carryOver = index;
-  });
+    var string = $( this ).text();
+    var name = string.substring(0, string.indexOf("Starts"));
+    var start = string.substring(string.indexOf("Starts")+7, string.indexOf("|"));
+    var end = string.substring(string.indexOf("Ends")+5);
 
-  
-
-  $( ".complete" ).each(function( index ) {
-
-    addToList(this , index + carryOver);
-  });
-
-  tasks.sort(function(a, b) {
-    a = a.start;
-    b = b.start;
-    return a<b ? -1 : a>b ? 1 : 0;
-  });
-
-  for (var i = tradeCat.length - 1; i >= 0; i--) {
-    trades[i] = {"name": tradeCat[i] , "open":true, "color": listOfColors[i]};
-
-  };
-
-
-
-    
-}
-
-function addToList(thing, index) {
-
-    var string = $( thing ).text();
-    string = string.replace(/^\s+|\s+$/g,'').replace(/\s\s+/g,' ');
-
-    var name = string.substring(0, string.indexOf("Starts")-1);
-
-    var start = string.substring(string.indexOf("Starts")+8, string.indexOf("Starts") + 18);
-    start = dateReorg(start);
-
-    var end = string.substring(string.indexOf("Ends")+6, string.indexOf("Ends")+16);
-    end = dateReorg(end);
-
-    var trade = string.substring((string.indexOf("ame:")+5));
-
-    var contractor = string.substring((string.indexOf("ontractor:")+ 11), (string.indexOf("Trade")- 1));
-
-    var description = $(thing).parent().next().children().text();
-
-    var action = $(thing).attr('href');
-
-    if(start == "Invalid Date") {
-      unscheduled[unscheduled.length] = {"content":description, "name": name , "trade":setTrade(trade)+1, "action": action, "contractor": contractor};
+    if(start = "Not Specified") {
+      unscheduled[index].name = name;
+      unscheduled[index].trade = 0;
     } else {
-      tasks[tasks.length] = {"content":description ,"name": name , "start": start , "end":end, "trade":setTrade(trade)+1, "action":action, "contractor": contractor};
-
+      tasks[index].name = name;
+      tasks[index].start = start;
+      tasks[index].end = end;
+      tasks[index].trade = 0;
     }
 
 
-    
+  });
 }
 
-$( window ).resize(function() {
-  refresh();
-});
+console.log(tasks);
+
 

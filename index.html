@@ -19,17 +19,164 @@
   <body>
 
 
-	<div class="row">
-	  <button class="button small-3 columns" onclick="left()">Previous Week</button>
-	  <button class="secondary hollow button small-3 columns" onclick="collapseTasks()">Collapse / Expand All</button>
-		
-		<button class="secondary hollow button hollow small-3 columns" onclick="toggleTimeFrame()">Toggle Time Frame</button>
-	  <button class="button small-3 columns" onclick="right()">Next Week</button>
-	</div>
-	
-	<div class="row">
-		<div id="gantt_here" style=' width:300px; height:100px;'></div>	
-	</div>
+<div class="top-header">
+        <div class="row">
+            <div class="small-8 columns">
+                <h2>
+                    <a id="ContentBody_lnkBack" href="javascript:__doPostBack(&#39;ctl00$ContentBody$lnkBack&#39;,&#39;&#39;)"><i class="fi-arrow-left"></i>&nbsp;&nbsp;</a>
+                        &nbsp;&nbsp;<span style="font-size: 0.9em;">Blank
+
+                </h2>
+
+            </div>
+            <div class="small-4 columns text-right">
+                <h2>
+                    <a id="ContentBody_lnkEdit" href="javascript:__doPostBack(&#39;ctl00$ContentBody$lnkEdit&#39;,&#39;&#39;)" style="margin-right: 0.5em;"><i class="fi-pencil"></i></a>
+
+                </h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="small-12 columns">
+                <div id="ContentBody_Panel1" class="button-panel">
+    
+                    <div>
+                        <div class="small-12 columns">
+                            Job ID: 2
+                        </div>
+                        <div class="small-12 columns">
+                            <a id="ContentBody_lnkAddTask" class="mob-btn" href="javascript:__doPostBack(&#39;ctl00$ContentBody$lnkAddTask&#39;,&#39;&#39;)"><i class="fi-plus show-for-small-only"></i><span class="hide-for-small-only">Add Task</span></a>
+                        </div>
+                    </div>
+                    <div class="hide">
+                        <input type="submit" name="ctl00$ContentBody$btnAddTask" value="Add Task" id="ContentBody_btnAddTask" />
+                        <input type="submit" name="ctl00$ContentBody$btnJobDetails" value="Edit Job" id="ContentBody_btnJobDetails" />
+                        <input type="submit" name="ctl00$ContentBody$btnDone" value="Back" id="ContentBody_btnDone" />
+                    </div>
+                
+</div>
+            </div>
+        </div>
+    </div>
+    <div class="row section">
+        <div class="small-12 columns">
+            <h2>Tasks</h2>
+        </div>
+    </div>
+    
+        <div class="row section">
+            <div class="small-12 columns">
+    
+        <div class="row site-address" data-equalizer>
+            <div class="small-12 medium-5 columns site-name">
+                <a id="ContentBody_TaskList_rpTasks_btnSelectJob_0" class="btn-3 text-left incomplete" data-equalizer-watch="" href="javascript:__doPostBack(&#39;ctl00$ContentBody$TaskList$rpTasks$ctl01$btnSelectJob&#39;,&#39;&#39;)" style="display:inline-block;width:100%;"><span style="display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: bold;"><i class="fi-play"></i>&nbsp;&nbsp;133 Rossall</span>
+                <span style="font-size: 0.8em; margin-left: 1.3em; display: block;">Starts:&nbsp;12/02/2016&nbsp;&nbsp;|&nbsp;&nbsp;Ends:&nbsp;14/02/2016</span>
+                 
+                    <span style="font-size: 0.8em; margin-left: 1.3em; display: block;">Contractor:&nbsp;Oli James</span>
+                    <span style="font-size: 0.8em; margin-left: 1.3em; display: block;">Trade Category Name:&nbsp;Builder</span>
+                </a>
+            </div>
+            <div class="small-12 medium-7 columns site-details" data-equalizer-watch><span style="display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; margin-bottom: 0.4em;">Complete costing estimate for 133 Rossall St</span>
+                
+            </div>
+        </div>
+    
+        <div class="row site-address" data-equalizer>
+            <div class="small-12 medium-5 columns site-name">
+                <a id="ContentBody_TaskList_rpTasks_btnSelectJob_1" class="btn-3 text-left incomplete" data-equalizer-watch="" href="javascript:__doPostBack(&#39;ctl00$ContentBody$TaskList$rpTasks$ctl02$btnSelectJob&#39;,&#39;&#39;)" style="display:inline-block;width:100%;"><span style="display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: bold;"><i class="fi-play"></i>&nbsp;&nbsp;Movie Theatre</span>
+                <span style="font-size: 0.8em; margin-left: 1.3em; display: block;">Starts:&nbsp;Not Specified&nbsp;&nbsp;|&nbsp;&nbsp;Ends:&nbsp;Not Specified</span>
+                 
+                    <span style="font-size: 0.8em; margin-left: 1.3em; display: block;">Contractor:&nbsp;Oli James</span>
+                    <span style="font-size: 0.8em; margin-left: 1.3em; display: block;">Trade Category Name:&nbsp;Builder</span>
+                </a>
+            </div>
+            <div class="small-12 medium-7 columns site-details" data-equalizer-watch><span style="display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; margin-bottom: 0.4em;">Future job - chase up Architect</span>
+                
+            </div>
+        </div>
+    
+        <div class="row site-address" data-equalizer>
+            <div class="small-12 medium-5 columns site-name">
+                <a id="ContentBody_TaskList_rpTasks_btnSelectJob_2" class="btn-3 text-left incomplete" data-equalizer-watch="" href="javascript:__doPostBack(&#39;ctl00$ContentBody$TaskList$rpTasks$ctl03$btnSelectJob&#39;,&#39;&#39;)" style="display:inline-block;width:100%;"><span style="display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: bold;"><i class="fi-play"></i>&nbsp;&nbsp;University</span>
+                <span style="font-size: 0.8em; margin-left: 1.3em; display: block;">Starts:&nbsp;06/04/2016 12:15&nbsp;&nbsp;|&nbsp;&nbsp;Ends:&nbsp;Not Specified</span>
+                 
+                    <span style="font-size: 0.8em; margin-left: 1.3em; display: block;">Contractor:&nbsp;Oli James</span>
+                    <span style="font-size: 0.8em; margin-left: 1.3em; display: block;">Trade Category Name:&nbsp;Builder</span>
+                </a>
+            </div>
+            <div class="small-12 medium-7 columns site-details" data-equalizer-watch><span style="display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; margin-bottom: 0.4em;">Attend site to review Main Contractors Claim</span>
+                
+            </div>
+        </div>
+    
+        <div class="row site-address" data-equalizer>
+            <div class="small-12 medium-5 columns site-name">
+                <a id="ContentBody_TaskList_rpTasks_btnSelectJob_3" class="btn-3 text-left incomplete" data-equalizer-watch="" href="javascript:__doPostBack(&#39;ctl00$ContentBody$TaskList$rpTasks$ctl04$btnSelectJob&#39;,&#39;&#39;)" style="display:inline-block;width:100%;"><span style="display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: bold;"><i class="fi-play"></i>&nbsp;&nbsp;Mall</span>
+                <span style="font-size: 0.8em; margin-left: 1.3em; display: block;">Starts:&nbsp;25/02/2016&nbsp;&nbsp;|&nbsp;&nbsp;Ends:&nbsp;25/02/2016</span>
+                 
+                    <span style="font-size: 0.8em; margin-left: 1.3em; display: block;">Contractor:&nbsp;Oli James</span>
+                    <span style="font-size: 0.8em; margin-left: 1.3em; display: block;">Trade Category Name:&nbsp;Builder</span>
+                </a>
+            </div>
+            <div class="small-12 medium-7 columns site-details" data-equalizer-watch><span style="display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; margin-bottom: 0.4em;">Apply for consent</span>
+                
+            </div>
+        </div>
+    
+        <div class="row site-address" data-equalizer>
+            <div class="small-12 medium-5 columns site-name">
+                <a id="ContentBody_TaskList_rpTasks_btnSelectJob_4" class="btn-3 text-left incomplete" data-equalizer-watch="" href="javascript:__doPostBack(&#39;ctl00$ContentBody$TaskList$rpTasks$ctl05$btnSelectJob&#39;,&#39;&#39;)" style="display:inline-block;width:100%;"><span style="display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: bold;"><i class="fi-play"></i>&nbsp;&nbsp;Apartments</span>
+                <span style="font-size: 0.8em; margin-left: 1.3em; display: block;">Starts:&nbsp;Not Specified&nbsp;&nbsp;|&nbsp;&nbsp;Ends:&nbsp;Not Specified</span>
+                 
+                    <span style="font-size: 0.8em; margin-left: 1.3em; display: block;">Contractor:&nbsp;Oli James</span>
+                    <span style="font-size: 0.8em; margin-left: 1.3em; display: block;">Trade Category Name:&nbsp;Electrician</span>
+                </a>
+            </div>
+            <div class="small-12 medium-7 columns site-details" data-equalizer-watch><span style="display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; margin-bottom: 0.4em;">COmplete light instalation</span>
+                
+            </div>
+        </div>
+    
+        <div class="row site-address" data-equalizer>
+            <div class="small-12 medium-5 columns site-name">
+                <a id="ContentBody_TaskList_rpTasks_btnSelectJob_5" class="btn-3 text-left incomplete" data-equalizer-watch="" href="javascript:__doPostBack(&#39;ctl00$ContentBody$TaskList$rpTasks$ctl06$btnSelectJob&#39;,&#39;&#39;)" style="display:inline-block;width:100%;"><span style="display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: bold;"><i class="fi-play"></i>&nbsp;&nbsp;New</span>
+                <span style="font-size: 0.8em; margin-left: 1.3em; display: block;">Starts:&nbsp;10/02/2016&nbsp;&nbsp;|&nbsp;&nbsp;Ends:&nbsp;11/02/2016</span>
+                 
+                    <span style="font-size: 0.8em; margin-left: 1.3em; display: block;">Contractor:&nbsp;Oli James</span>
+                    <span style="font-size: 0.8em; margin-left: 1.3em; display: block;">Trade Category Name:&nbsp;Builder</span>
+                </a>
+            </div>
+            <div class="small-12 medium-7 columns site-details" data-equalizer-watch><span style="display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; margin-bottom: 0.4em;">new</span>
+                
+            </div>
+        </div>
+    
+        <div class="row site-address" data-equalizer>
+            <div class="small-12 medium-5 columns site-name">
+                <a id="ContentBody_TaskList_rpTasks_btnSelectJob_6" class="btn-3 text-left incomplete" data-equalizer-watch="" href="javascript:__doPostBack(&#39;ctl00$ContentBody$TaskList$rpTasks$ctl07$btnSelectJob&#39;,&#39;&#39;)" style="display:inline-block;width:100%;"><span style="display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: bold;"><i class="fi-play"></i>&nbsp;&nbsp;new</span>
+                <span style="font-size: 0.8em; margin-left: 1.3em; display: block;">Starts:&nbsp;05/02/2016&nbsp;&nbsp;|&nbsp;&nbsp;Ends:&nbsp;10/02/2016</span>
+                 
+                    <span style="font-size: 0.8em; margin-left: 1.3em; display: block;">Contractor:&nbsp;Oli James</span>
+                    <span style="font-size: 0.8em; margin-left: 1.3em; display: block;">Trade Category Name:&nbsp;Builder</span>
+                </a>
+            </div>
+            <div class="small-12 medium-7 columns site-details" data-equalizer-watch><span style="display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; margin-bottom: 0.4em;">new</span>
+                <input type="submit" name="ctl00$ContentBody$TaskList$rpTasks$ctl07$btnHistory" value="Task History" id="ContentBody_TaskList_rpTasks_btnHistory_6" />
+            </div>
+        </div>
+    
+        
+            </div>
+        </div>
+
+
+
+
+
+
+  <div class="row">
+        <div id="gantt_here" style=' width:300px; height:100px;'></div> 
+    </div>
 
 
 
@@ -43,13 +190,11 @@
 </div>
 
 
-	<script src="lib/gantt/dhtmlxgantt.js"></script>
+	
 	<script src="js/vendor/jquery.js"></script>
 
 
 
-    <script src="js/main.js"></script>
-	<script src="js/data.js"></script>
 
 
 	<script src="js/foundation.min.js"></script>
@@ -57,6 +202,9 @@
 	  $(document).foundation();
 
 	</script>
+  <script src="lib/gantt/dhtmlxgantt.js"></script>
+    <script src="js/main.js"></script>
+  <script src="js/data.js"></script>
   </body>
 
 

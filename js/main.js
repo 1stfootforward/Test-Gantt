@@ -1,27 +1,43 @@
-		gantt.config.show_unscheduled = true;
-		
-		gantt.config.show_grid = false;
-		gantt.config.drag_resize = false;
-		gantt.config.drag_progress = false;
-		gantt.config.drag_move = false;
-		gantt.config.drag_links = true;
+    gantt.config.show_unscheduled = true;
+    
+    gantt.config.show_grid = false;
+    gantt.config.drag_resize = false;
+    gantt.config.drag_progress = false;
+    gantt.config.drag_move = false;
+    gantt.config.drag_links = false;
+    gantt.config.min_column_width = 1;
+
+    var buttonGrid = "<div class='row gchart' ><a class='button small-3 columns' onclick='left()'><i class='fi-arrow-left'></i></a><a class='secondary hollow button small-2 columns' onclick='collapseTasks()'><i id='collapse' class='fi-arrows-compress'></i></a><a class='secondary hollow button small-2 columns' onclick='chronologicalToggle()'><i id='chrono' class='fi-indent-more'></i></a><a class='secondary hollow button small-2 columns' onclick='toggleTimeFrame()'><i id='time' class='fi-calendar'></i></a><a class='button small-3 columns' onclick='right()'><i class='fi-arrow-right'></i></a></div><div id='gantt_here' style=' width:300px; height:100px;'></div></div>";
+
+    $( "#gantt_here" ).parent().html(buttonGrid);
 
 
+    var date_range = 6
 
+    var today = new Date();
+    var startOfWeek = getMonday(new Date());
+    var endOfWeek = new Date(startOfWeek.setDate(startOfWeek.getDate()+date_range));
 
+    startOfWeek = getMonday(new Date());
+    gantt.config.start_date = startOfWeek;
+    gantt.config.end_date = endOfWeek;
 
-		var date_range = 6
+    var zoom = true;
+    var collapse = false;
+    var chronological = false;
 
-		var today = new Date();
-		var startOfWeek = getMonday(new Date());
-		var endOfWeek = new Date(startOfWeek.setDate(startOfWeek.getDate()+date_range));
+    		var str = "";
+			var startH = "<div class='row'><div class='small-12 medium-5 columns'>";
+			var middleH = "</div><div class='small-12 medium-5 columns'>";
+			var endH = "</div></div> </br>"
 
-		startOfWeek = getMonday(new Date());
-		gantt.config.start_date = startOfWeek;
-		gantt.config.end_date = endOfWeek;
+		function chronologicalToggle() {
+			$("#chrono").toggleClass( "fi-indent-more" );
+			$("#chrono").toggleClass( "fi-indent-less" );
+			chronological = !chronological;
+			refresh();
 
-		var zoom = true;
-		var collapse = true;
+		}
 
 		function left() {
 			startOfWeek.setDate(startOfWeek.getDate()-7);
@@ -58,6 +74,9 @@
 				startOfWeek.setDate(startOfWeek.getDate()-7);
 				endOfWeek.setDate(endOfWeek.getDate()+7);
 				gantt.config.step = 1;
+				gantt.config.subscales = [
+    				{unit:"day", step:1, date:"%d"}
+				];
 			} else {
 				zoom = true;
 
@@ -92,36 +111,84 @@
 
 
 		gantt.templates.scale_cell_class = function(date){
-			if(date.toDateString()==today.toDateString()){ return "today"; }
-        	if(date.getDay()==0||date.getDay()==6){ return "weekend"; }
+
+			if(zoom) {
+				if(date.toDateString()==today.toDateString()){ return "today"; }
+        		if(date.getDay()==0||date.getDay()==6){ return "weekend"; }
+        	} else {
+        		date = new Date(date);
+        		if(date < new Date(today) && date.setDate(date.getDate() + 7) > new Date(today) ){  return "today"; }
+        	}
         	
     	};
 
+    	function format (d) {
+    		
+			var d_names = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
 
+			var m_names = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+
+			var curr_day = d.getDay();
+			var curr_date = d.getDate();
+			var sup = "";
+			if (curr_date == 1 || curr_date == 21 || curr_date ==31)
+			   {
+			   sup = "st";
+			   }
+			else if (curr_date == 2 || curr_date == 22)
+			   {
+			   sup = "nd";
+			   }
+			else if (curr_date == 3 || curr_date == 23)
+			   {
+			   sup = "rd";
+			   }
+			else
+			   {
+			   sup = "th";
+			   }
+			var curr_month = d.getMonth();
+			var curr_year = d.getFullYear();
+
+			return (d_names[curr_day] + " " + curr_date + "<SUP>" + sup + "</SUP> " + m_names[curr_month] + " " + curr_year);
+
+    	}
 
 
 
 		function taskFired(task){
+			str = "";
 
-			var id = task.id - underline.length;
-			$( "#modalTitle" ).html(tasks[id].name);
-			$( "#modalContent" ).html(tasks[id].content);
-			$( "#modalSDate" ).html(tasks[id].start);
-			$( "#modalEDate" ).html(tasks[id].end);
-			$( "#modalTrade" ).html(trades[tasks[id].trade - 1].name);
+
+			var i = task.id - 1
+			if(!chronological) { i = i - trades.length; }
+
+			var button = "</p> <p><a class='primary hollow button columns' href=" + tasks[i].action + ">View</a>"
+
+			str = str + startH + " <p class='lead'>" + tasks[i].name + "</p><p>" + tasks[i].content + "</p><p>" + format(tasks[i].start) + "</p>" + middleH + "<p>" + tasks[i].contractor + "</p><p>" + trades[tasks[i].trade - 1].name + "</p><p>" + format(tasks[i].end) + "</p>" + endH + button  ;
+
+			$( "#modalTitle" ).html(tasks[i].name);
+			$( "#modalContent" ).html(str);
+			$( "#modalSDate" ).html();
+			$( "#modalEDate" ).html();
+
 			$('#myModal').foundation('reveal', 'open');
 
 		}
 
 		function unscheduledFire(id){
 
+			str = "";
+			$( "#modalTitle" ).html(trades[id-1].name);
 
-			$( "#modalTitle" ).html(trades[id].name);
 
-			var str = "";
+
 			for (var i = unscheduled.length - 1; i >= 0; i--) {
 				if(unscheduled[i].trade == id) {
-					str = str + " <p class='lead'>" + unscheduled[i].name + "</p><p> Task description</p>";
+					var button = "</p> <p><a class='primary hollow button columns' href=" + unscheduled[i].action + ">View</a>"
+
+					str = str + startH + " <p class='lead'>" + unscheduled[i].name + "</p><p>" + unscheduled[i].content + "</p>" + middleH + "<p>" + unscheduled[i].contractor + "</p>" + button + endH ;
+
 				}
 			};
 			$( "#modalContent" ).html(str);
@@ -133,6 +200,8 @@
 		}
 
 		function collapseTasks() {
+			$("#collapse").toggleClass( "fi-arrows-compress" );
+			$("#collapse").toggleClass( "fi-arrows-expand" );
 			if(collapse) {
 				gantt.eachTask(function(task){
 					if(task.parent==0) {
@@ -155,6 +224,8 @@
     
 
 		gantt.templates.task_class = function(start, end, task){
+
+			if(chronological) { return task.color + " chrono_task lighten"}
     		 
         	 if(task.parent>0) {
         	 	parent = gantt.getTask(task.parent);
@@ -171,6 +242,7 @@
 
     	gantt.templates.task_row_class = function(start, end, task){ 
         	
+        	 if(chronological) { return task.direction + " chrono_row"}
         	
         	 if(task.parent>0) {
 	        	 	return task.color + " lighten " + task.direction;
@@ -182,4 +254,6 @@
 	       	 
 	        	 
     	};
+
+
 
