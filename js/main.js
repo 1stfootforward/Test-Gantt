@@ -172,7 +172,7 @@
       if(task.both == "qright") {start = "No start date"}
       if(task.both == "qleft") {end = "No end date"}
 
-      str = str + " <div class='small-12 columns'><h2 class='lead'>" + tasks[i].name + "</h2>" + "<p>" + trades[tasks[i].trade - 1].name + "</p> </div><div class='small-12 columns'>" + tasks[i].content + "</div><div class='small-12 columns'><p><br /> <b>Start: </b> " + start + " " + tasks[i].startTime + "</p>" + "<p> <b>End: </b> " + end + " " + tasks[i].startTime + "</p>" + button  ;
+      str = str + " <div class='small-12 columns'><h2 class='lead'>" + trades[tasks[i].trade - 1].name + "</h2>" + "<h4>" + tasks[i].name + "</h4> </div><div class='small-12 columns'>" + tasks[i].content + "</div><div class='small-12 columns'><p><br /> <b>Start: </b> " + start + " " + tasks[i].startTime + "</p>" + "<p> <b>End: </b> " + end + " " + tasks[i].startTime + "</p>" + button  ;
 
       $( "#modalTitle" ).html();
       $( "#modalContent" ).html(str);
@@ -195,7 +195,7 @@
 
       var button = "</p> <p><a class='primary hollow button small-six columns' href=" + unscheduled[i].action + ">Edit</a>" 
 
-      str = str + " <div class='small-12 columns'><h2 class='lead'>" + unscheduled[i].name + "</h2>" + "<p>" + trades[unscheduled[i].trade - 1].name + "</p> </div><div class='small-12 columns'>" + unscheduled[i].content + "</div>" + button  ;
+      str = str + " <div class='small-12 columns'><h2 class='lead'>" + trades[unscheduled[i].trade - 1].name + "</h2>" + "<h4>" + unscheduled[i].name + "</h4> </div><div class='small-12 columns'>" + unscheduled[i].content + "</div>" + button  ;
 
       $( "#modalTitle" ).html();
       $( "#modalContent" ).html(str);
