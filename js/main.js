@@ -188,7 +188,6 @@
 
       if(task.id >= count) {window.location.href=task.action; return 0}
 
-      alert(task.id);
 
       var i = task.id - 1;
       if(!chronological) { i = i - trades.length - tasks.length; }
@@ -683,6 +682,9 @@ function addToList(thing, index) {
       var secondRow = string.substring(string.indexOf("\n"), string.indexOf("Contractor"));
       var startT = secondRow.substring(secondRow.indexOf("Starts") + 18, secondRow.indexOf("|"));
       var endT = secondRow.substring(secondRow.indexOf("|")+18);
+
+      if (startT == "ied ") { startT = "";}
+      if (endT == "ied ") { endT = "";}
 
       var oneDate = "qboth";
 
