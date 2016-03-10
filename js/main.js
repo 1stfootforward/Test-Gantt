@@ -1,7 +1,7 @@
     gantt.config.show_unscheduled = true;
     
     gantt.config.show_grid = false;
-    gantt.config.drag_resize = false;
+    gantt.config.drag_resize = true;
     gantt.config.drag_progress = false;
     gantt.config.drag_move = false;
     gantt.config.drag_links = false;
@@ -161,9 +161,9 @@
 			var i = task.id - 1
 			if(!chronological) { i = i - trades.length; }
 
-			var button = "</p> <p><a class='primary hollow button columns' href=" + tasks[i].action + ">View</a>" 
+			var button = "</p> <p><a class='primary hollow button columns' href=" + tasks[i].action + ">Edit</a>" 
 
-			str = str + startH + " <p class='lead'>" + tasks[i].name + "</p><p>" + tasks[i].content + "</p>" + middleH + "<p>" + tasks[i].contractor + "</p><p>" + trades[tasks[i].trade - 1].name + "</p> </div></div><div class='row'><div class='small-12 medium-6 columns'><p> <b>Start: </b> " + format(tasks[i].start) + "</p>" + middleH + "<p> <b>End: </b> " + format(tasks[i].end) + "</p>" + endH + button  ;
+			str = str + startH + " <p class='lead'>" + tasks[i].name + "</p>" + middleH + "<p>" + trades[tasks[i].trade - 1].name + "</p> </div></div><div class='row'><div class='small-12 columns'>" + tasks[i].content + "</div></div><br /><div class='row'><div class='small-12 medium-6 columns'><p> <b>Start: </b> " + format(tasks[i].start) + " " + tasks[i].startTime + "</p>" + middleH + "<p> <b>End: </b> " + format(tasks[i].end) + " " + tasks[i].startTime + "</p>" + endH + button  ;
 
 			$( "#modalTitle" ).html(tasks[i].name);
 			$( "#modalContent" ).html(str);
@@ -179,11 +179,9 @@
 			str = "";
 			$( "#modalTitle" ).html(trades[id-1].name);
 
-
-
 			for (var i = unscheduled.length - 1; i >= 0; i--) {
 				if(unscheduled[i].trade == id) {
-					var button = "</p> <p><a class='primary hollow button columns' href=" + unscheduled[i].action + ">View</a>"
+					var button = "</p> <p><a class='primary hollow button columns' href=" + unscheduled[i].action + ">Edit</a>"
 
 					str = str + startH + " <p class='lead'>" + unscheduled[i].name + "</p><p>" + unscheduled[i].content + "</p>" + middleH + "<p>" + unscheduled[i].contractor + "</p>" + button + endH ;
 

@@ -2,7 +2,7 @@
         
         var formatFunc = gantt.date.date_to_str("%d/%m/%Y");
         var color = [];
-        var listOfColors = ["gantt_blue","gantt_red","gantt_orange","gantt_green","gantt_purple","gantt_navy"];
+        var listOfColors = ["gantt_blue","gantt_purple","gantt_green","gantt_red","gantt_orange","gantt_pink","gantt_yellow"];
         var underline = [];
         var duration;
         var early = new Date();
@@ -17,15 +17,15 @@
         var tasks = [];
 
         var oldtasks = [
-            {"content":"Description of task","name":"Task One Name", "start":"02-09-2016", "end":"02-11-2016", "trade":1},
-            {"content":"Description of task","name":"Task Two", "start":"02-09-2016", "end":"02-14-2016", "trade":3},
-            {"content":"Description of task","name":"Task Three", "start":"02-11-2016", "end":"02-13-2016", "trade":2},
-            {"content":"Description of task","name":"Task Four", "start":"02-01-2016", "end":"02-14-2016", "trade":2},
-            {"content":"Description of task","name":"Task six", "start":"02-1-2016", "end":"02-6-2016", "trade":2},
-            {"content":"Description of task","name":"Task seven", "start":"02-18-2016", "end":"02-22-2016", "trade":3},
-            {"content":"Description of task","name":"Task Four", "start":"02-01-2017", "end":"02-14-2017", "trade":2},
-            {"content":"Description of task","name":"Task eight", "start":"02-01-2015", "end":"02-14-2015", "trade":2},
-            {"content":"Description of task","name":"Task Five", "start":"01-11-2016", "end":"02-13-2016", "trade":2}] ;
+            {content:"Description of task","name":"Task One Name", "start":"02-09-2016", "end":"02-11-2016", "trade":1},
+            {content:"Description of task","name":"Task Two", "start":"02-09-2016", "end":"02-14-2016", "trade":3},
+            {content:"Description of task","name":"Task Three", "start":"02-11-2016", "end":"02-13-2016", "trade":2},
+            {content:"Description of task","name":"Task Four", "start":"02-01-2016", "end":"02-14-2016", "trade":2},
+            {content:"Description of task","name":"Task six", "start":"02-1-2016", "end":"02-6-2016", "trade":2},
+            {content:"Description of task","name":"Task seven", "start":"02-18-2016", "end":"02-22-2016", "trade":3},
+            {content:"Description of task","name":"Task Four", "start":"02-01-2017", "end":"02-14-2017", "trade":2},
+            {content:"Description of task","name":"Task eight", "start":"02-01-2015", "end":"02-14-2015", "trade":2},
+            {content:"Description of task","name":"Task Five", "start":"01-11-2016", "end":"02-13-2016", "trade":2}] ;
 
         var trades = [];
 
@@ -66,16 +66,14 @@
               addUnscheduled();
             }
             
-
-            
             height = ((count - removeHeight )*40);
-            document.getElementById('gantt_here').setAttribute("style","height:"+height+"px");
+            document.getElementById('gantt_here').setAttribute("style","height:"+ (window.innerHeight - 45) +"px");
+
 
         }
 
         function addTrades() {
             for (var i in trades) {
-                c = i + 1;
                 load.data[i] = {id: count , text: trades[i].name ,  start_date: early, duration:9999, parent: 0, color: trades[i].color, order:10, open: trades[i].open, direction: ""};
                 color[count] = trades[i].color;
                 count++;
@@ -87,6 +85,7 @@
           for (var i in tasks) {
                 var start = tasks[i].start;
                 var end = tasks[i].end;
+
 
                     if(start > endOfWeek || end < startOfWeek ) {
                         if(start > endOfWeek){side = "rightArrow";}else{side = "leftArrow"}
@@ -124,7 +123,7 @@
             }
         }
 
-        function addUnscheduled() {
+        function addGroupedUnscheduled() {
           var groups = []
           for (var i = unscheduled.length - 1; i >= 0; i--) {
             if(isNaN(groups[unscheduled[i].trade])) {
@@ -132,12 +131,21 @@
             } else {groups[unscheduled[i].trade]++;}
           };
           
-          for (var i = groups.length - 1; i > 0; i--) {
+          for (var i = groups.length - 1; i >= 0; i--) {
             if(typeof groups[i] != 'undefined') {
               load.data[count - 1] = {id: count , text: "+ " + groups[i] + " Unscheduled" , unscheduled: false , start_date: startOfWeek , duration: 1, color: "unscheduled "+color[i], order:50, parent: i};
               count++;
-            }
-            
+            }       
+          };
+        }
+
+        function addUnscheduled() {
+          var groups = []
+          for (var i = unscheduled.length - 1; i >= 0; i--) {
+            if(typeof groups[i] != 'undefined') {
+              load.data[count - 1] = {id: count , text: "+ " + unscheduled[i].name + " Unscheduled" , unscheduled: false , start_date: startOfWeek , duration: 1, color: "unscheduled "+color[i], order:50, parent: i};
+              count++;
+            } 
           };
         }
 
@@ -180,7 +188,6 @@
         underlineTasks();
 
         arrows();
-
 
      function underlineCells(id, color) {
         var list = underline[id];
@@ -300,12 +307,12 @@ function dateReorg(string) {
 
 
 
-function setTrade(trade) {
+function setTrade(trade, contractor) {
+  trade = trade + " - " + contractor;
   
   if(tradeCat.length > 0) {
-    for (var i = 0; i < tradeCat.length; i++) {
+    for (var i = tradeCat.length; i >= 0; i--) {
         if(tradeCat[i] == trade) {
-
           return i;
         }
     };
@@ -341,13 +348,11 @@ function grabTasks() {
   });
 
   for (var i = tradeCat.length - 1; i >= 0; i--) {
-    trades[i] = {"name": tradeCat[i] , "open":true, "color": listOfColors[i]};
+    trades[i] = {"name": tradeCat[i] , "open":true, "color": listOfColors[i % 7]};
 
   };
 
 
-
-    
 }
 
 function addToList(thing, index) {
@@ -371,15 +376,15 @@ function addToList(thing, index) {
 
     var action = $(thing).attr('href');
 
-    if(start == "Invalid Date") {
-      unscheduled[unscheduled.length] = {"content":description, "name": name , "trade":setTrade(trade)+1, "action": action, "contractor": contractor};
+    if(start == "Invalid Date" || end == "Invalid Date") {
+      unscheduled[unscheduled.length] = {content:description, "name": name , "tradeName": trade, "trade":setTrade(trade,contractor)+1, "action": action, "contractor": contractor};
     } else {
-      tasks[tasks.length] = {"content":description ,"name": name , "start": start , "end":end, "trade":setTrade(trade)+1, "action":action, "contractor": contractor};
+      var secondRow = string.substring(string.indexOf("\n"), string.indexOf("Contractor"));
+      var startT = secondRow.substring(secondRow.indexOf("Starts") + 18, secondRow.indexOf("|"));
+      var endT = secondRow.substring(secondRow.indexOf("|")+18);
+      tasks[tasks.length] = {content:description ,"name": name , "start": start, "startTime": startT, "end":end, "endTime": endT, "tradeName": trade, "trade":setTrade(trade,contractor)+1, "action":action, "contractor": contractor};
 
-    }
-
-
-    
+    }   
 }
 
 $( window ).resize(function() {

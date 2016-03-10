@@ -5,6 +5,10 @@
 	    font-size: 36px; 
 	}	
 
+	.gantt_task_content, sup {
+	    cursor:pointer!important;	
+	}
+
 	.gantt_task_line, .gantt_task_progress {
 	    border: none;
     	border-radius: 5px;
@@ -37,10 +41,11 @@
 
 	.gantt_blue {background-color:#3366CC !important;}
 	.gantt_red {background-color: #DC3912 !important;}
-	.gantt_orange {background-color: #FF9900 !important;}
+	.gantt_orange {background-color: #E67300 !important;}
+	.gantt_yellow {background-color: #FF9900 !important;}
 	.gantt_green {background-color: #109618 !important;}
 	.gantt_purple {background-color: #990099 !important;}
-	.gantt_navy {background-color: #3B3EAC !important;}
+	.gantt_pink {background-color: #DD4477 !important;}
 
 
 
@@ -125,9 +130,13 @@
 .button-group {
 	width: 100%!important;
 	text-align: center!important;
-	margin-left: 7px!important;
 }
 
 .chrono_task {
 	opacity: 0.7!important;
+}
+
+.gantt_ver_scroll {
+	width: 980px!important;
+	display: visible!important;
 }
