@@ -1,13 +1,13 @@
     gantt.config.show_unscheduled = true;
     
     gantt.config.show_grid = false;
-    gantt.config.drag_resize = true;
+    gantt.config.drag_resize = false;
     gantt.config.drag_progress = false;
-    gantt.config.drag_move = true;
+    gantt.config.drag_move = false;
     gantt.config.drag_links = false;
     gantt.config.min_column_width = 1;
 
-    var buttonGrid = "<ul class='button-group round even-5 gchart' ><li><a class='button' onclick='left()'><i class='fi-arrow-left'></i></a></li><li><a class='secondary hollow button' onclick='collapseTasks()'><i id='collapse' class='fi-arrows-compress'></i></a></li><li><a class='secondary hollow button' onclick='chronologicalToggle()'><i id='chrono' class='fi-indent-more'></i></a></li><li><a class='secondary hollow button' onclick='toggleTimeFrame()'><i id='time' class='fi-calendar'></i></a></li><li><a class='button' onclick='right()'><i class='fi-arrow-right'></i></a></ul><div id='gantt_here' style=' width:300px; height:100px;'></div></div>";
+    var buttonGrid = "<ul class='button-group round even-6 gchart' ><li><a class='button' onclick='left()'><i class='fi-arrow-left'></i></a></li><li><a id=collapseButton class='secondary hollow button' onclick='collapseTasks()'><p id='collapse'>collapse</p></a></li><li><a class='secondary hollow button' onclick='toToday()'><p id='today'>today</p></a></li><li><a class='secondary hollow button' onclick='chronologicalToggle()'><p id='chrono'>gantt&nbspview</p></a></li><li><a class='secondary hollow button' onclick='toggleTimeFrame()'><p id='time'>zoom&nbspout</p></a></li><li><a class='button' onclick='right()'><i class='fi-arrow-right'></i></a></ul><div id='gantt_here' style=' width:300px; height:100px;'></div></div>";
     $( "#gantt_here" ).parent().html(buttonGrid);
 
     var date_range = 6
@@ -29,12 +29,39 @@
       var middleH = "</div><div class='small-12 medium-6 columns'>";
       var endH = "</div></div> </br>"
 
-    function chronologicalToggle() {
-      $("#chrono").toggleClass( "fi-indent-more" );
-      $("#chrono").toggleClass( "fi-indent-less" );
-      chronological = !chronological;
+    
+    function toToday() {
+
+       today = new Date();
+    startOfWeek = getMonday(new Date());
+    endOfWeek = new Date(startOfWeek.setDate(startOfWeek.getDate()+date_range));
+
+    startOfWeek = getMonday(new Date());
+    gantt.config.start_date = startOfWeek;
+    gantt.config.end_date = endOfWeek;
+
       refresh();
 
+    }
+
+    function chronologicalToggle() {
+      chronological = !chronological;
+
+      refresh();
+      
+      if(!chronological) {
+        $("#chrono").html('gantt&nbspview');
+        if(!collapse){
+          $("#collapse").html('collapse');
+        } else {
+          $("#collapse").html('expand');
+        }
+        collapse = false;
+      } else {
+        $("#chrono").html('trade&nbspview');
+        $("#collapse").html(' - ');
+        collapse = false;
+      }
     }
 
     function left() {
@@ -91,6 +118,12 @@
       gantt.config.start_date = startOfWeek;
       gantt.config.end_date = endOfWeek;
       refresh();
+
+      if(zoom) {
+        $("#time").html('zoom&nbspout');
+      } else {
+        $("#time").html('zoom&nbspin');
+      }
     };
 
     function mediaQuery() {
@@ -120,7 +153,16 @@
           
       };
 
+      gantt.templates.task_cell_class = function(ev, date, section) {
+        if (date.toDateString()==today.toDateString()) 
+        {
+          return "today";
+        }
+      }
+
       function format (d) {
+
+        if(d == "open") {return "Not Specified"}
         
       var d_names = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
 
@@ -165,14 +207,13 @@
       if(!chronological) { i = i - trades.length; }
 
       var button = "</p> <p><a class='primary hollow button small-six columns' href=" + tasks[i].action + ">Edit</a>" 
-
       
       var start = format(tasks[i].start);
       var end = format(tasks[i].end);
       if(task.both == "qright") {start = "No start date"}
       if(task.both == "qleft") {end = "No end date"}
 
-      str = str + " <div class='small-12 columns'><h2 class='lead'>" + trades[tasks[i].trade - 1].name + "</h2>" + "<h4>" + tasks[i].name + "</h4> </div><div class='small-12 columns'>" + tasks[i].content + "</div><div class='small-12 columns'><p><br /> <b>Start: </b> " + start + " " + tasks[i].startTime + "</p>" + "<p> <b>End: </b> " + end + " " + tasks[i].startTime + "</p>" + button  ;
+      str = str + " <div class='small-12 columns'><h2 class='lead'>" + tasks[i].name + "</h2>" + "<p>" + trades[tasks[i].trade - 1].name + "</p> </div><div class='small-12 columns'>" + tasks[i].content + "</div><div class='small-12 columns'><p><br /> <b>Start: </b> " + start + " " + tasks[i].startTime + "</p>" + "<p> <b>End: </b> " + end + " " + tasks[i].endTime + "</p>" + button  ;
 
       $( "#modalTitle" ).html();
       $( "#modalContent" ).html(str);
@@ -186,15 +227,12 @@
     function unscheduledFire(task){
       str = "";
 
-      if(task.id >= count) {window.location.href=task.action; return 0}
-
-
       var i = task.id - 1;
-      if(!chronological) { i = i - trades.length - tasks.length; }
+      if(!chronological) { i = i - trades.length - tasks.length; } else {i = i - tasks.length;}
 
       var button = "</p> <p><a class='primary hollow button small-six columns' href=" + unscheduled[i].action + ">Edit</a>" 
 
-      str = str + " <div class='small-12 columns'><h2 class='lead'>" + trades[unscheduled[i].trade - 1].name + "</h2>" + "<h4>" + unscheduled[i].name + "</h4> </div><div class='small-12 columns'>" + unscheduled[i].content + "</div>" + button  ;
+      str = str + " <div class='small-12 columns'><h2 class='lead'>" + unscheduled[i].name + "</h2>" + "<p>" + trades[unscheduled[i].trade - 1].name + "</p> </div><div class='small-12 columns'>" + unscheduled[i].content + "</div>" + button  ;
 
       $( "#modalTitle" ).html();
       $( "#modalContent" ).html(str);
@@ -226,36 +264,42 @@
     }
 
     function collapseTasks() {
-      $("#collapse").toggleClass( "fi-arrows-compress" );
-      $("#collapse").toggleClass( "fi-arrows-expand" );
-      if(collapse) {
-        gantt.eachTask(function(task){
-          if(task.id < count) {
-            if(task.parent==0) {
-                gantt.open(task.id);
-                trades[task.id-1].open = true;
+      if(!chronological) {
+        if(collapse) {
+          gantt.eachTask(function(task){
+            if(task.id < count) {
+              if(task.parent==0) {
+                  gantt.open(task.id);
+                  trades[task.id-1].open = true;
+              }
             }
-          }
-        });
-        collapse = false;       
-      } else {
-        gantt.eachTask(function(task){
-          if(task.id < count) {
-            if(task.parent==0) {
-                gantt.close(task.id)
-                trades[task.id-1].open = false;
+          });
+          collapse = false;       
+        } else {
+          gantt.eachTask(function(task){
+            if(task.id < count) {
+              if(task.parent==0) {
+                  gantt.close(task.id)
+                  trades[task.id-1].open = false;
+              }
             }
-          }
-        });
-        collapse = true;
+          });
+          collapse = true;
+        }
+        refresh();
+
+        if(collapse) {
+          $("#collapse").html('expand');
+        } else {
+          $("#collapse").html('collapse');
+        }
       }
-      refresh();
     }
     
 
     gantt.templates.task_class = function(start, end, task){
 
-      if(chronological) { return task.color + " chrono_task"}
+      
          
            if(task.parent>0) {
             parent = gantt.getTask(task.parent);
@@ -267,7 +311,11 @@
                 return task.color + " big " + task.both;
                }
              
-            } else { return task.color + " project"; }
+            } else { 
+               if(chronological) { return task.direction + " chrono_row " + task.color + " shrunk " + task.both}
+              return task.color + " project"; 
+
+            }
       };
 
       gantt.templates.task_row_class = function(start, end, task){ 
@@ -347,7 +395,7 @@
             var side = "";
 
             if (trades.length==0 || chronological == true) {
-              addTasksChronologically();
+              addTasksGanttView();
               addNoParentUnscheduled()
             } else{
               addTrades();
@@ -355,8 +403,10 @@
               addUnscheduled();
             }
 
-            load.data[count - 1] = {id: count , text: "<sub><i class='fi-plus'></i></sub>" , unscheduled: false , start_date: endOfWeek , color: "add", action: "javascript:__doPostBack('ctl00$ContentBody$lnkAddTask','')", duration: 1, order:40, direction: ""};
-            
+            var action = "javascript:__doPostBack('ctl00$ContentBody$lnkAddTask','')";
+            $( ".gantt_data_area" ).append( "<a href='' id='gantt_add' class='right small alert button round'><sup>New Task</a>" );
+            $("#gantt_add").attr("href", action);
+
             height = ((count - removeHeight )*40);
             document.getElementById('gantt_here').setAttribute("style","height:"+ (window.innerHeight - 45) +"px");
 
@@ -377,18 +427,178 @@
                 var start = tasks[i].start;
                 var end = tasks[i].end;
 
-
+                  if(start != "open" && end !="open" ) {
                     if(start > endOfWeek || end < startOfWeek ) {
                         if(start > endOfWeek){side = "rightArrow";}else{side = "leftArrow"}
-                        load.data[count - 1] = {id: count , text: tasks[i].name , both: tasks[i].oneDate, unscheduled:true , start_date: early , duration: 9999, color: color[tasks[i].trade], order:10, parent: [tasks[i].trade], direction: side};
+                        load.data[count - 1] = {id: count , text: tasks[i].icon + " " + tasks[i].name , both: tasks[i].oneDate, unscheduled:true , start_date: early , duration: 9999, color: color[tasks[i].trade], order:10, parent: [tasks[i].trade], direction: side};
                         
                     }
                     else {
                         dur = daysBetween( start, end);
                         markCells(tasks[i].trade, start, dur);
-                        load.data[count - 1] = {id: count , text: tasks[i].name , both: tasks[i].oneDate, unscheduled: false , start_date: formatFunc(start) , duration: dur+1, color: color[tasks[i].trade], order:10, parent: [tasks[i].trade], direction: ""};
+                        load.data[count - 1] = {id: count , text: tasks[i].icon + " " +tasks[i].name , both: tasks[i].oneDate, unscheduled: false , start_date: formatFunc(start) , duration: dur+1, color: color[tasks[i].trade], order:10, parent: [tasks[i].trade], direction: ""};
   
                     }
+                  }
+                  else {
+                      if(start == "open") {
+                        start = new Date(endOfWeek);
+                          start.setDate(start.getDate() - 1);
+                          dur = 2;
+
+                        if(end < startOfWeek ) {
+                          /*arrow*/
+                          side = "leftArrow";
+                            load.data[count - 1] = {id: count , text: tasks[i].icon + " " + tasks[i].name , both: tasks[i].oneDate, unscheduled:true , start_date: early , duration: 9999, color: color[tasks[i].trade], order:10, parent: [tasks[i].trade], direction: side};
+                        }
+                        else {
+                          
+
+                          if(end < endOfWeek) {
+                            start = new Date(end);
+                            start.setDate(end.getDate() - 4);
+                            dur = daysBetween( start, end);
+                            side = "";
+                            load.data[count - 1] = {id: count , text: tasks[i].icon + " " +tasks[i].name , both: tasks[i].oneDate, unscheduled: false , start_date: formatFunc(start) , duration: dur+1, color: color[tasks[i].trade], order:10, parent: [tasks[i].trade], direction: ""};
+                          
+                          } else {
+                            side = "leftArrow";
+
+                            load.data[count - 1] = {id: count , text: tasks[i].icon + " " +tasks[i].name , both: tasks[i].oneDate, unscheduled: false , start_date: formatFunc(start) , duration: dur+1, color: color[tasks[i].trade], order:10, parent: [tasks[i].trade], direction: ""};
+                        
+                          }
+                        }
+                      } else {
+
+                        if(start > startOfWeek ) {
+                          end = new Date(start);
+                          end.setDate(start.getDate() - 3);
+                          dur = daysBetween( start, end);
+
+                          if(start > endOfWeek) { 
+                            side = "rightArrow";
+                            load.data[count - 1] = {id: count , text: tasks[i].icon + " " + tasks[i].name , both: tasks[i].oneDate, unscheduled:true , start_date: early , duration: 9999, color: color[tasks[i].trade], order:10, parent: [tasks[i].trade], direction: side};
+                        
+                          } else {
+                            load.data[count - 1] = {id: count , text: tasks[i].icon + " " +tasks[i].name , both: tasks[i].oneDate, unscheduled: false , start_date: formatFunc(start) , duration: dur+1, color: color[tasks[i].trade], order:10, parent: [tasks[i].trade], direction: ""};
+                          }
+                        } else {
+
+                          end = new Date(startOfWeek);
+                          dur = daysBetween( start, end);
+                          side = "leftArrow";
+                          load.data[count - 1] = {id: count , text: tasks[i].icon + " " +tasks[i].name , both: tasks[i].oneDate, unscheduled: false , start_date: formatFunc(start) , duration: dur+1, color: color[tasks[i].trade], order:10, parent: [tasks[i].trade], direction: ""};
+  
+                        }
+
+                      }
+                  }
+                count++;
+            }
+
+        }
+
+        function addTasksGanttView() {
+
+            var x = 0;
+            var open = [];
+            var y = 0;
+            var closed = [];
+            for (var i in tasks) {
+              if(tasks[i].start == "open" || tasks[i].end == "open" ) {
+                open[x] = tasks[i]; x++;
+              } else {
+                closed[y] = tasks[i]; y++
+              }
+            }
+
+              closed.sort(function(a, b) {
+                a = a.start;
+                b = b.start;
+                return a<b ? -1 : a>b ? 1 : 0;
+              });
+              closed.sort(function(a, b) {
+                if(a.start != "open") { a = a.start; } else { a = a.end; }
+                if(b.start != "open") { b = b.start; } else { b = b.end; }
+                return a<b ? -1 : a>b ? 1 : 0;
+              });
+
+            addSortedGantt(closed);
+            addSortedGantt(open);
+
+        }
+
+        function addSortedGantt(tasks) {  
+          for (var i in tasks) {
+                var start = tasks[i].start;
+                var end = tasks[i].end;
+
+                  if(start != "open" && end !="open" ) {
+                    if(start > endOfWeek || end < startOfWeek ) {
+                        if(start > endOfWeek){side = "rightArrow";}else{side = "leftArrow"}
+                        load.data[count - 1] = {id: count , text: tasks[i].icon + " " + tasks[i].name , both: tasks[i].oneDate, unscheduled:true , start_date: early , duration: 9999, color: color[tasks[i].trade], order:count, parent: 0, direction: side};
+                        
+                    }
+                    else {
+                        dur = daysBetween( start, end);
+                        markCells(tasks[i].trade, start, dur);
+                        load.data[count - 1] = {id: count , text: tasks[i].icon + " " +tasks[i].name , both: tasks[i].oneDate, unscheduled: false , start_date: formatFunc(start) , duration: dur+1, color: color[tasks[i].trade], order:count, parent: 0, direction: ""};
+  
+                    }
+                  }
+                  else {
+                      if(start == "open") {
+                        start = new Date(endOfWeek);
+                          start.setDate(start.getDate() - 1);
+                          dur = 2;
+
+                        if(end < startOfWeek ) {
+                          /*arrow*/
+                          side = "leftArrow";
+                            load.data[count - 1] = {id: count , text: tasks[i].icon + " " + tasks[i].name , both: tasks[i].oneDate, unscheduled:true , start_date: early , duration: 9999, color: color[tasks[i].trade], order:count, parent: 0, direction: side};
+                        }
+                        else {
+                          
+
+                          if(end < endOfWeek) {
+                            start = new Date(end);
+                            start.setDate(end.getDate() - 4);
+                            dur = daysBetween( start, end);
+                            side = "";
+                            load.data[count - 1] = {id: count , text: tasks[i].icon + " " +tasks[i].name , both: tasks[i].oneDate, unscheduled: false , start_date: formatFunc(start) , duration: dur+1, color: color[tasks[i].trade], order:count, parent: 0, direction: ""};
+                          
+                          } else {
+                            side = "leftArrow";
+
+                            load.data[count - 1] = {id: count , text: tasks[i].icon + " " +tasks[i].name , both: tasks[i].oneDate, unscheduled: false , start_date: formatFunc(start) , duration: dur+1, color: color[tasks[i].trade], order:count, parent: 0, direction: ""};
+                        
+                          }
+                        }
+                      } else {
+
+                        if(start > startOfWeek ) {
+                          end = new Date(start);
+                          end.setDate(start.getDate() - 3);
+                          dur = daysBetween( start, end);
+
+                          if(start > endOfWeek) { 
+                            side = "rightArrow";
+                            load.data[count - 1] = {id: count , text: tasks[i].icon + " " + tasks[i].name , both: tasks[i].oneDate, unscheduled:true , start_date: early , duration: 9999, color: color[tasks[i].trade], order:count, parent: 0, direction: side};
+                        
+                          } else {
+                            load.data[count - 1] = {id: count , text: tasks[i].icon + " " +tasks[i].name , both: tasks[i].oneDate, unscheduled: false , start_date: formatFunc(start) , duration: dur+1, color: color[tasks[i].trade], order:count, parent: 0, direction: ""};
+                          }
+                        } else {
+
+                          end = new Date(startOfWeek);
+                          dur = daysBetween( start, end);
+                          side = "leftArrow";
+                          load.data[count - 1] = {id: count , text: tasks[i].icon + " " +tasks[i].name , both: tasks[i].oneDate, unscheduled: false , start_date: formatFunc(start) , duration: dur+1, color: color[tasks[i].trade], order:count, parent: 0, direction: ""};
+  
+                        }
+
+                      }
+                  }
                 count++;
             }
 
@@ -396,9 +606,10 @@
 
         function addTasksChronologically() { 
           for (var i in tasks) {
+
                 var start = tasks[i].start;
                 var end = tasks[i].end;
-
+                if(start != "open" && end != "open") {
                     if(start > endOfWeek || end < startOfWeek ) {
                         if(start > endOfWeek){side = "rightArrow";}else{side = "leftArrow"}
                         load.data[count - 1] = {id: count , text: tasks[i].name , unscheduled:true , start_date: early , duration: 9999, color: color[tasks[i].trade], order:40, direction: side};
@@ -410,7 +621,8 @@
                         load.data[count - 1] = {id: count , text: tasks[i].name , unscheduled: false , start_date: formatFunc(start) , duration: dur+1, color: color[tasks[i].trade], order:40, direction: ""};
   
                     }
-                count++;
+                  count++;
+                }
             }
         }
 
@@ -424,7 +636,7 @@
           
           for (var i = groups.length - 1; i >= 0; i--) {
             if(typeof groups[i] != 'undefined') {
-              load.data[count - 1] = {id: count , text: "+ " + groups[i] + " <b>Unscheduled</b>" , unscheduled: false , start_date: startOfWeek , duration: 1, color: "unscheduled "+color[i], order:50, parent: i};
+              load.data[count - 1] = {id: count , text: "+ " + groups[i] + " <b><u>U</u></b>" , unscheduled: false , start_date: startOfWeek , duration: 1, color: "unscheduled "+color[i], order:50, parent: i};
               count++;
             }       
           };
@@ -434,7 +646,7 @@
           var groups = []
           for (var i in unscheduled) {
               
-              load.data[count - 1] = {id: count , text: unscheduled[i].name + " <b>Unscheduled</b>" , unscheduled: false , start_date: startOfWeek , duration: 1, color: "unscheduled "+color[unscheduled[i].trade], order:50, parent: unscheduled[i].trade};
+              load.data[count - 1] = {id: count , text: unscheduled[i].icon + " <b><u>U</u></b> " +unscheduled[i].name , unscheduled: false , start_date: startOfWeek , duration: 1, color: "unscheduled "+color[unscheduled[i].trade], order:50, parent: unscheduled[i].trade};
 
               count++;
           };
@@ -442,9 +654,9 @@
 
         function addNoParentUnscheduled() {
           var groups = []
-          for (var i = unscheduled.length; i > 0; i--) {
+          for (var i in unscheduled) {
               
-              load.data[count - 1] = {id: count , text: unscheduled[i-1].name + " <b>Unscheduled</b>" , unscheduled: false , start_date: startOfWeek , duration: 1, color: "unscheduled "+color[i], order:50, parent: 0};
+              load.data[count - 1] = {id: count , text: " <b><u>U</u></b> " +unscheduled[i].name , unscheduled: false , start_date: startOfWeek , duration: 1, color: "unscheduled "+color[unscheduled[i].trade], order:50, parent: 0};
 
               count++;
           };
@@ -534,7 +746,7 @@
           underlineTasks();
           arrows();
         }
-        
+        timeMark()
     }
 
       mediaQuery();
@@ -561,7 +773,7 @@
     gantt.attachEvent("onTaskClick", function(id,e){
 
       task = gantt.getTask(id);
-      if(task.parent==0 && task.order != 40) {
+      if(task.parent==0 && task.order != 40 && !chronological) {
           if( gantt.getTask(id).open) { 
             gantt.close(id)
             trades[task.id-1].open = false;
@@ -630,7 +842,7 @@ function grabTasks() {
 
   $( ".incomplete" ).each(function( index ) {
 
-    addToList(this , index);
+    addToList(this , index, "<i class='fi-minus'></i>","incomplete");
     carryOver = index;
   });
 
@@ -638,7 +850,7 @@ function grabTasks() {
 
   $( ".complete" ).each(function( index ) {
 
-    addToList(this , index + carryOver);
+    addToList(this , index + carryOver, "<i class='fi-checkbox'></i>","complete");
   });
 
   tasks.sort(function(a, b) {
@@ -655,7 +867,7 @@ function grabTasks() {
 
 }
 
-function addToList(thing, index) {
+function addToList(thing, index, icon, className) {
 
     var string = $( thing ).text();
     string = string.replace(/^\s+|\s+$/g,'').replace(/\s\s+/g,' ');
@@ -677,29 +889,35 @@ function addToList(thing, index) {
     var action = $(thing).attr('href');
 
     if(start == "Invalid Date" && end == "Invalid Date") {
-      unscheduled[unscheduled.length] = {content:description, "name": name , "tradeName": trade, "trade":setTrade(trade,contractor)+1, "action": action, "contractor": contractor};
+      unscheduled[unscheduled.length] = {content:description, "name": name, "icon": "" , "tradeName": trade, "trade":setTrade(trade,contractor)+1, "action": action, "contractor": contractor};
     } else {
       var secondRow = string.substring(string.indexOf("\n"), string.indexOf("Contractor"));
       var startT = secondRow.substring(secondRow.indexOf("Starts") + 18, secondRow.indexOf("|"));
       var endT = secondRow.substring(secondRow.indexOf("|")+18);
 
-      if (startT == "ied ") { startT = "";}
-      if (endT == "ied ") { endT = "";}
+    
+    if(startT.indexOf(':')<0) {
+      startT = "";
+    }
+    if(endT.indexOf(':')<0) {
+      endT = "";
+    }
+    console.log(endT);
+    console.log(startT);
 
       var oneDate = "qboth";
 
       if(start == "Invalid Date") {
             oneDate = "qright";
-            start = new Date(end);
-            start.setDate(start.getDate() - 3);
+            start = "open"
       }
 
       if(end == "Invalid Date") {
             oneDate = "qleft";
-            end = new Date(start);
-            end.setDate(end.getDate() + 3); 
+            end = "open"; 
       }
-      tasks[tasks.length] = {content:description ,"name": name , "start": start, "startTime": startT, "end":end, "endTime": endT, "tradeName": trade, "trade":setTrade(trade,contractor)+1, "action":action, "contractor": contractor, "oneDate": oneDate};
+      oneDate = oneDate + " " + className;
+      tasks[tasks.length] = {content:description ,"name": name, "icon": icon , "start": start, "startTime": startT, "end":end, "endTime": endT, "tradeName": trade, "trade":setTrade(trade,contractor)+1, "action":action, "contractor": contractor, "oneDate": oneDate};
     }   
 }
 
@@ -707,3 +925,16 @@ $( window ).resize(function() {
   refresh();
 });
 
+
+
+
+
+function timeMark() {
+    var wide = $(".gantt_task_cell.today").width() / 24;
+    var hour = today.getHours();
+    wide = wide*hour;
+    $('.gantt_task_cell.today:first').append("<div style='margin-left:" + wide + "px!important' class=' line right alert '></div>");
+    $(".gantt_task_row:last").css( "color", "red" );
+}
+
+timeMark();
