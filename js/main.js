@@ -56,11 +56,9 @@
         } else {
           $("#collapse").html('expand');
         }
-        collapse = false;
       } else {
         $("#chrono").html('trade&nbspview');
         $("#collapse").html(' - ');
-        collapse = false;
       }
     }
 
@@ -505,26 +503,21 @@
             var y = 0;
             var closed = [];
             for (var i in tasks) {
-              if(tasks[i].start == "open" || tasks[i].end == "open" ) {
+              if(tasks[i].start == "open" ) {
                 open[x] = tasks[i]; x++;
               } else {
                 closed[y] = tasks[i]; y++
               }
             }
 
-              closed.sort(function(a, b) {
-                a = a.start;
-                b = b.start;
-                return a<b ? -1 : a>b ? 1 : 0;
-              });
-              closed.sort(function(a, b) {
+             
+              tasks.sort(function(a, b) {
                 if(a.start != "open") { a = a.start; } else { a = a.end; }
                 if(b.start != "open") { b = b.start; } else { b = b.end; }
                 return a<b ? -1 : a>b ? 1 : 0;
               });
 
-            addSortedGantt(closed);
-            addSortedGantt(open);
+            addSortedGantt(tasks);
 
         }
 
@@ -669,7 +662,8 @@
             var array = underline[parent];
             if(array == null) {array = [];}
             if(startOfWeek > start) {dur = dur-before+1; before = 0;}
-            if(dur>date_range) { dur = 7;}
+         
+
             for (var i = 0; i < before; i++) {
 
                
@@ -684,6 +678,7 @@
 
                
             };
+            console.log(array);
             underline[parent] = array;
 
         }
@@ -704,6 +699,7 @@
 
      function underlineCells(id, color) {
         var list = underline[id];
+        console.log(list);
         if(list != undefined) {
           for (var i = 0; i < list.length; i++) {
             if(list[i]) {
@@ -902,8 +898,6 @@ function addToList(thing, index, icon, className) {
     if(endT.indexOf(':')<0) {
       endT = "";
     }
-    console.log(endT);
-    console.log(startT);
 
       var oneDate = "qboth";
 
