@@ -498,17 +498,7 @@
 
         function addTasksGanttView() {
 
-            var x = 0;
-            var open = [];
-            var y = 0;
-            var closed = [];
-            for (var i in tasks) {
-              if(tasks[i].start == "open" ) {
-                open[x] = tasks[i]; x++;
-              } else {
-                closed[y] = tasks[i]; y++
-              }
-            }
+
 
              
               tasks.sort(function(a, b) {
