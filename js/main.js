@@ -7,7 +7,7 @@
     gantt.config.drag_links = false;
     gantt.config.min_column_width = 1;
 
-    var buttonGrid = "<ul class='button-group round even-6 gchart' ><li><a class='button' onclick='left()'><i class='fi-arrow-left'></i></a></li><li><a id=collapseButton class='secondary hollow button' onclick='collapseTasks()'><p id='collapse'>collapse</p></a></li><li><a class='secondary hollow button' onclick='toToday()'><p id='today'>today</p></a></li><li><a class='secondary hollow button' onclick='chronologicalToggle()'><p id='chrono'>gantt&nbspview</p></a></li><li><a class='secondary hollow button' onclick='toggleTimeFrame()'><p id='time'>zoom&nbspout</p></a></li><li><a class='button' onclick='right()'><i class='fi-arrow-right'></i></a></ul><div id='gantt_here' style=' width:300px; height:100px;'></div></div>";
+    var buttonGrid = "<ul class='button-group round even-7 gchart' ><li><a class='button' onclick='left()'><i class='fi-arrow-left'></i></a></li><li><a id=collapseButton class='secondary hollow button' onclick='collapseTasks()'><p id='collapse'>collapse</p></a></li><li><a class='secondary hollow button' onclick='toToday()'><p id='today'>today</p></a></li><li><a class='secondary hollow button' onclick='chronologicalToggle()'><p id='chrono'>gantt&nbspview</p></a></li><li><a class='secondary hollow button' onclick='toggleIn()'><p id='time'>-</p></a></li><li><a class='secondary hollow button' onclick='toggleOut()'><p><i class='fi-zoom-out'></i></p></a></li><li><a class='button' onclick='right()'><i class='fi-arrow-right'></i></a></ul><div id='gantt_here' style=' width:300px; height:100px;'></div></div>";
     $( "#gantt_here" ).parent().html(buttonGrid);
 
     var date_range = 6
@@ -32,15 +32,30 @@
     
     function toToday() {
 
-       today = new Date();
-    startOfWeek = getMonday(new Date());
-    endOfWeek = new Date(startOfWeek.setDate(startOfWeek.getDate()+date_range));
+    today = new Date();
+    var dur = daysBetween(startOfWeek, endOfWeek);
+    if(dur>8){
+      var side = ((dur/7)-1)/2;
+    } else {side=0;}
 
-    startOfWeek = getMonday(new Date());
-    gantt.config.start_date = startOfWeek;
-    gantt.config.end_date = endOfWeek;
+      var thisWeek = getMonday(today);
+
+      startOfWeek = new Date(thisWeek);
+      endOfWeek = new Date(thisWeek);
+      
+     startOfWeek.setDate(startOfWeek.getDate()-(side*7));
+     
+      endOfWeek.setDate(endOfWeek.getDate()+((side+1)*7)-1);
+
+
+
+      gantt.config.start_date = startOfWeek;
+      gantt.config.end_date = endOfWeek;
+
+      today = new Date();
 
       refresh();
+    
 
     }
 
@@ -82,8 +97,29 @@
       refresh();
     };
 
-    function toggleTimeFrame() {
-      if(zoom) {
+    function toggleIn() {
+        if(daysBetween(startOfWeek, endOfWeek) >= 14) {
+         timeFrame(-7);
+        } else {
+          zoom=false;
+          timeFrame(0);
+        }
+    }
+
+    function toggleOut() {
+        zoom=true;
+        timeFrame(7);
+    }
+
+    function timeFrame(dur) {
+      date_range = dur;
+
+      startOfWeek.setDate(startOfWeek.getDate()-date_range);
+      endOfWeek.setDate(endOfWeek.getDate()+date_range);
+
+      
+
+      if(daysBetween(startOfWeek, endOfWeek) > 13) { 
         zoom = false;
 
         var weekScaleTemplate = function(date){
@@ -92,43 +128,38 @@
           return dateToStr(date) + " - " + dateToStr(endDate);
         };
         gantt.templates.date_scale = weekScaleTemplate;
-        date_range = 20;
         gantt.config.scale_unit = "week";
-        startOfWeek.setDate(startOfWeek.getDate()-7);
-        endOfWeek.setDate(endOfWeek.getDate()+7);
         gantt.config.step = 1;
         gantt.config.subscales = [
             {unit:"day", step:1, date:"%d"}
         ];
-      } else {
+      } else { 
+        
         zoom = true;
 
         gantt.templates.date_scale = null;
         gantt.config.scale_unit = "day";
         gantt.config.date_scale = "%M %d"; 
-        date_range = 6;
 
-        startOfWeek.setDate(startOfWeek.getDate()+7);
-        endOfWeek.setDate(endOfWeek.getDate()-7);
+        
         gantt.config.step = 1;
       }
 
+        
+
       gantt.config.start_date = startOfWeek;
       gantt.config.end_date = endOfWeek;
-      refresh();
+      
 
-      if(zoom) {
-        $("#time").html('zoom&nbspout');
-      } else {
-        $("#time").html('zoom&nbspin');
-      }
+
+      refresh();
     };
 
     function mediaQuery() {
 
-      if(window.innerWidth < 1000) {
-        toggleTimeFrame();
-      }
+    //   if(window.innerWidth < 1000) {
+    //     toggleTimeFrame();
+    //   }
     };
 
     function getMonday(d) {
@@ -668,7 +699,6 @@
 
                
             };
-            console.log(array);
             underline[parent] = array;
 
         }
@@ -689,7 +719,6 @@
 
      function underlineCells(id, color) {
         var list = underline[id];
-        console.log(list);
         if(list != undefined) {
           for (var i = 0; i < list.length; i++) {
             if(list[i]) {
@@ -733,6 +762,13 @@
           arrows();
         }
         timeMark()
+
+      if(daysBetween(startOfWeek, endOfWeek) > 7) {
+        $("#time").html("<p><i class='fi-zoom-in'></i></p>");
+      } else {
+        $("#time").html('-');
+      }
+
     }
 
       mediaQuery();
